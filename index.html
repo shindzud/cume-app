@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaPure - Продажа чистой воды</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --backdrop-blur: 20px;
+        }
+
+        [data-theme="dark"] {
+            --glass-bg: rgba(0, 0, 0, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes morphing {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        @keyframes waterSplash {
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            30% { opacity: 1; transform: scale(1.5) rotate(120deg); }
+            60% { opacity: 0.8; transform: scale(2) rotate(240deg); }
+            100% { opacity: 0; transform: scale(0.5) rotate(360deg); }
+        }
+
+        @keyframes waterDrop {
+            0% { transform: translateY(-15px) scale(1) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; transform: translateY(-5px) scale(1.2) rotate(45deg); }
+            50% { opacity: 1; transform: translateY(10px) scale(1) rotate(180deg); }
+            100% { transform: translateY(30px) scale(0.6) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes waterWave {
+            0% { transform: translateX(-100%) scaleY(0.8); }
+            50% { transform: translateX(50%) scaleY(1.2); }
+            100% { transform: translateX(200%) scaleY(0.8); }
+        }
+
+        @keyframes waterBubble {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            20% { opacity: 1; transform: translateY(-10px) scale(0.8); }
+            80% { opacity: 0.8; transform: translateY(-50px) scale(1.5); }
+            100% { transform: translateY(-80px) scale(0); opacity: 0; }
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100px) rotate(0deg); }
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        body {
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .dark body::before {
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .abstract-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .abstract-shape {
+            position: absolute;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.1;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation: morphing 8s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+            background: var(--secondary-gradient);
+            animation: float 7s ease-in-out infinite;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            top: 30%;
+            right: 40%;
+            animation-delay: 4s;
+            background: var(--accent-gradient);
+            animation: rotate 15s linear infinite;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+
+        .nav-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .nav-glass {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-modern {
+            position: relative;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-modern:active {
+            transform: translateY(0);
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ddd;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            overflow: hidden;
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .theme-toggle.dark {
+            background: var(--primary-gradient);
+        }
+
+        .theme-toggle.dark::before {
+            left: 33px;
+            background: #1a1a1a;
+        }
+
+        .water-effect {
+            position: absolute;
+            pointer-events: none;
+            font-size: 32px;
+            animation: waterSplash 1.2s ease-out forwards;
+            filter: drop-shadow(0 0 15px currentColor);
+            z-index: 100;
+        }
+
+        .water-drop {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            animation: waterDrop 1.5s ease-out forwards;
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.8);
+            z-index: 99;
+        }
+
+        .water-wave {
+            position: absolute;
+            width: 100px;
+            height: 20px;
+            background: linear-gradient(90deg, transparent, rgba(79, 172, 254, 0.6), transparent);
+            border-radius: 50%;
+            animation: waterWave 1s ease-out forwards;
+            z-index: 98;
+        }
+
+        .water-bubble {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(79, 172, 254, 0.7);
+            border-radius: 50%;
+            animation: waterBubble 2s ease-out forwards;
+            z-index: 97;
+        }
+
+        .falling-item {
+            position: absolute;
+            font-size: 30px;
+            animation: fall linear forwards;
+            cursor: pointer;
+            user-select: none;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            transition: all 0.2s ease;
+        }
+
+        .falling-item:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+        }
+
+        .game-area {
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            background: 
+                linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%),
+                linear-gradient(white, white) padding-box,
+                var(--accent-gradient) border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        .dark .game-area {
+            background: 
+                linear-gradient(135deg, rgba(79, 172, 254, 0.05) 0%, rgba(0, 242, 254, 0.05) 100%),
+                linear-gradient(#1a1a1a, #1a1a1a) padding-box,
+                var(--accent-gradient) border-box;
+        }
+
+        .player {
+            position: absolute;
+            bottom: 10px;
+            width: 60px;
+            height: 20px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            transition: left 0.1s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .player::before {
+            content: '🏄‍♂️';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+        }
+
+        .product-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .product-card:hover::before {
+            left: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+        }
+
+        .achievement-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-card.unlocked {
+            background: rgba(67, 233, 123, 0.1);
+            border: 1px solid rgba(67, 233, 123, 0.3);
+        }
+
+        .achievement-card.unlocked::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--success-gradient);
+            opacity: 0.1;
+        }
+
+        .achievement-card:hover {
+            transform: scale(1.02);
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 8px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .notification {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: glitch 0.5s ease-out;
+        }
+
+        .icon-3d {
+            display: inline-block;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .icon-3d:hover {
+            transform: rotateY(20deg) rotateX(10deg);
+        }
+
+        .holographic {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 400% 400%;
+            animation: holographic 3s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        @keyframes holographic {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .glow {
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .support-chat {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+            animation: glitch 0.3s ease-out;
+        }
+
+        .message.user {
+            background: var(--primary-gradient);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.support {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .abstract-shape {
+                opacity: 0.05;
+            }
+            
+            .glass-card {
+                backdrop-filter: blur(10px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+    <div class="min-h-screen">
+        <!-- Abstract Background -->
+        <div class="abstract-bg">
+            <div class="abstract-shape shape-1"></div>
+            <div class="abstract-shape shape-2"></div>
+            <div class="abstract-shape shape-3"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav-glass text-gray-800 dark:text-white p-4 sticky top-0 z-50">
+            <div class="max-w-4xl mx-auto flex items-center justify-between">
+                <h1 class="text-2xl font-bold flex items-center holographic">
+                    <span class="icon-3d mr-2">💧</span> AquaPure
+                </h1>
+                <div class="flex items-center space-x-3">
+                    <button id="shopBtn" class="btn-modern px-6 py-2 text-base">
+                        <span class="icon-3d">💰</span> Продажа
+                    </button>
+                    <button id="gameBtn" class="btn-modern px-6 py-2 text-base" style="background: var(--success-gradient);">
+                        <span class="icon-3d">🎮</span> Игра
+                    </button>
+                    <button id="registerBtn" class="btn-modern px-6 py-2 text-base" style="background: var(--warning-gradient);">
+                        <span class="icon-3d">👤</span> Профиль
+                    </button>
+                    <button id="supportBtn" class="btn-modern px-6 py-2 text-base" style="background: var(--secondary-gradient);">
+                        <span class="icon-3d">💬</span> Поддержка
+                    </button>
+                    <button id="themeToggle" class="theme-toggle" title="Переключить тему">
+                        <span class="sr-only">Переключить тему</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto p-4">
+            <!-- Shop Section -->
+            <div id="shopSection" class="space-y-8">
+                <div class="text-center py-12">
+                    <h2 class="text-5xl font-bold mb-6 holographic">Продажа чистой воды</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Продайте свою воду по лучшим ценам! Мы покупаем любые объемы качественной воды</p>
+                    <div class="mt-8 flex justify-center">
+                        <div class="w-32 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="product-card p-8 group">
+                        <div class="text-6xl text-center mb-6 icon-3d">💧</div>
+                        <div class="absolute top-4 right-4 px-3 py-1 bg-blue-500 text-white text-xs rounded-full">
+                            CLASSIC
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-center">AquaPure Classic</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6 text-center">Продайте нам вашу классическую очищенную воду. Принимаем воду с любой системой фильтрации</p>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                pH баланс: 7.0-7.5
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                Минерализация: 150-300 мг/л
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">₽50</span>
+                                <span class="text-sm text-gray-500 ml-2">за литр</span>
+                            </div>
+                            <button class="btn-modern px-6 py-3 text-base btn-splash">
+                                <span class="icon-3d">💰</span> Продать
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="product-card p-8 group glow">
+                        <div class="text-6xl text-center mb-6 icon-3d">🌟</div>
+                        <div class="absolute top-4 right-4 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs rounded-full">
+                            PREMIUM
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-center">AquaPure Premium</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6 text-center">Продайте премиум воду с минералами по высокой цене! Особенно ценим ионизированную воду</p>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                pH баланс: 8.0-8.5 (щелочная)
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                Добавлены электролиты
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                Антиоксидантные свойства
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">₽120</span>
+                                <span class="text-sm text-gray-500 ml-2">за литр</span>
+                            </div>
+                            <button class="btn-modern px-6 py-3 text-base btn-splash" style="background: var(--warning-gradient);">
+                                <span class="icon-3d">💎</span> Продать
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="product-card p-8 group">
+                        <div class="text-6xl text-center mb-6 icon-3d">✨</div>
+                        <div class="absolute top-4 right-4 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs rounded-full">
+                            ELITE
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-center">AquaPure Elite</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6 text-center">Продайте элитную артезианскую воду по максимальной цене! Особенно ценим воду из глубинных источников</p>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                Глубина источника: 300м
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                Редкие минералы
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                Ограниченная серия
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">₽200</span>
+                                <span class="text-sm text-gray-500 ml-2">за литр</span>
+                            </div>
+                            <button class="btn-modern px-6 py-3 text-base btn-splash" style="background: var(--secondary-gradient);">
+                                <span class="icon-3d">👑</span> Продать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="glass-card p-8 mt-12">
+                    <h3 class="text-2xl font-bold text-center mb-8 holographic">Почему продают воду через AquaPure?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="text-4xl mb-4 icon-3d">💰</div>
+                            <h4 class="font-semibold mb-2">Высокие цены</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Лучшие цены на рынке за качественную воду</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl mb-4 icon-3d">⚡</div>
+                            <h4 class="font-semibold mb-2">Быстрая оплата</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Моментальный расчет при приемке товара</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl mb-4 icon-3d">🚚</div>
+                            <h4 class="font-semibold mb-2">Бесплатный вывоз</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Забираем воду с вашего склада бесплатно</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Section -->
+            <div id="gameSection" class="hidden space-y-6">
+                <div class="text-center py-8">
+                    <h2 class="text-3xl font-bold mb-4">Игра "Поймай каплю"</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Ловите падающие капли воды и зарабатывайте очки!</p>
+                </div>
+
+                <div class="glass-card p-8">
+                    <!-- Player Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 text-center">
+                        <div class="stat-card p-4 group">
+                            <div class="text-3xl mb-2 icon-3d">🏆</div>
+                            <div class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent" id="bestScore">0</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Лучший результат</div>
+                        </div>
+                        <div class="stat-card p-4 group">
+                            <div class="text-3xl mb-2 icon-3d">🎮</div>
+                            <div class="text-3xl font-bold bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent" id="totalGames">0</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Всего игр</div>
+                        </div>
+                        <div class="stat-card p-4 group">
+                            <div class="text-3xl mb-2 icon-3d">⭐</div>
+                            <div class="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent" id="playerLevel">1</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Уровень</div>
+                        </div>
+                        <div class="stat-card p-4 group">
+                            <div class="text-3xl mb-2 icon-3d">💎</div>
+                            <div class="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent" id="totalScore">0</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Общий счет</div>
+                        </div>
+                    </div>
+
+                    <!-- Experience Bar -->
+                    <div class="mb-8">
+                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-3 font-medium">
+                            <span class="flex items-center">
+                                <span class="icon-3d mr-2">✨</span>
+                                Опыт до следующего уровня
+                            </span>
+                            <span id="expText" class="font-bold">0/500</span>
+                        </div>
+                        <div class="progress-bar h-3">
+                            <div id="expBar" class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-2xl font-bold">
+                            <span class="icon-3d mr-2">🎯</span>
+                            Текущие очки: 
+                            <span id="score" class="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">0</span>
+                        </div>
+                        <button id="startGameBtn" class="btn-modern px-8 py-4 text-lg font-bold btn-splash glow" style="background: var(--success-gradient);">
+                            <span class="icon-3d mr-2">🚀</span>
+                            Начать игру
+                        </button>
+                    </div>
+
+                    <div id="gameArea" class="game-area bg-gradient-to-b from-sky-200 to-blue-300 dark:from-sky-800 dark:to-blue-900">
+                        <div id="player" class="player"></div>
+                        <div id="gameInstructions" class="absolute inset-0 flex items-center justify-center text-xl font-semibold">
+                            Нажмите "Начать игру" чтобы играть
+                        </div>
+                    </div>
+
+                    <!-- Achievements -->
+                    <div class="mt-10">
+                        <h3 class="text-2xl font-bold mb-6 text-center holographic">
+                            <span class="icon-3d mr-2">🏆</span>
+                            Достижения
+                        </h3>
+                        <div id="achievementsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Achievements will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Section -->
+            <div id="registerSection" class="hidden space-y-6">
+                <div class="text-center py-8">
+                    <h2 class="text-3xl font-bold mb-4">Регистрация</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Создайте аккаунт для доступа ко всем функциям</p>
+                </div>
+
+                <div class="max-w-md mx-auto glass-card p-8">
+                    <form id="registerForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Имя пользователя</label>
+                            <input type="text" id="username" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Пароль</label>
+                            <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" required>
+                        </div>
+                        <button type="submit" class="btn-modern w-full py-4 font-bold text-lg btn-splash" style="background: var(--secondary-gradient);">
+                            <span class="icon-3d mr-2">✨</span>
+                            Зарегистрироваться
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Support Section -->
+            <div id="supportSection" class="hidden space-y-6">
+                <div class="text-center py-8">
+                    <h2 class="text-3xl font-bold mb-4 holographic">Поддержка пользователей</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Напишите нам, и мы поможем решить любой вопрос!</p>
+                </div>
+
+                <div class="max-w-2xl mx-auto glass-card p-8">
+                    <div class="support-chat bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6" id="chatArea">
+                        <div class="message support">
+                            <div class="flex items-center mb-2">
+                                <span class="icon-3d mr-2">🤖</span>
+                                <strong>Поддержка AquaPure</strong>
+                            </div>
+                            Здравствуйте! Как дела? Чем можем помочь? 💧
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            placeholder="Напишите ваше сообщение..." 
+                            class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base"
+                            onkeypress="if(event.key==='Enter') sendMessage()"
+                        >
+                        <button 
+                            onclick="sendMessage()" 
+                            class="btn-modern px-6 py-3 text-base btn-splash" 
+                            style="background: var(--success-gradient);"
+                        >
+                            <span class="icon-3d">📤</span> Отправить
+                        </button>
+                    </div>
+
+                    <!-- Быстрые ответы -->
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3 flex items-center">
+                            <span class="icon-3d mr-2">⚡</span>
+                            Быстрые вопросы
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button onclick="quickMessage('Как продать воду?')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <span class="icon-3d mr-2">💰</span>
+                                Как продать воду?
+                            </button>
+                            <button onclick="quickMessage('Какие цены на воду?')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <span class="icon-3d mr-2">💎</span>
+                                Какие цены на воду?
+                            </button>
+                            <button onclick="quickMessage('Условия доставки')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <span class="icon-3d mr-2">🚚</span>
+                                Условия доставки
+                            </button>
+                            <button onclick="quickMessage('Проблема с игрой')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <span class="icon-3d mr-2">🎮</span>
+                                Проблема с игрой
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Enhanced water splash effect
+        function createWaterEffect(e) {
+            const button = e.currentTarget;
+            const rect = button.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+            
+            // Create main splash effect with more particles
+            for (let i = 0; i < 15; i++) {
+                const splash = document.createElement('div');
+                splash.className = 'water-effect';
+                splash.innerHTML = ['💧', '🌊', '💦', '✨'][Math.floor(Math.random() * 4)];
+                splash.style.left = clickX + 'px';
+                splash.style.top = clickY + 'px';
+                splash.style.animationDelay = (i * 0.08) + 's';
+                splash.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                button.appendChild(splash);
+
+                setTimeout(() => splash.remove(), 1400);
+            }
+
+            // Create enhanced water drops
+            for (let i = 0; i < 20; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'water-drop';
+                drop.style.left = (clickX + (Math.random() - 0.5) * 80) + 'px';
+                drop.style.top = clickY + 'px';
+                drop.style.animationDelay = (Math.random() * 0.6) + 's';
+                drop.style.width = (Math.random() * 8 + 8) + 'px';
+                drop.style.height = (Math.random() * 8 + 8) + 'px';
+                button.appendChild(drop);
+
+                setTimeout(() => drop.remove(), 1800);
+            }
+
+            // Create water waves
+            for (let i = 0; i < 5; i++) {
+                const wave = document.createElement('div');
+                wave.className = 'water-wave';
+                wave.style.left = (clickX - 50) + 'px';
+                wave.style.top = clickY + 'px';
+                wave.style.animationDelay = (i * 0.2) + 's';
+                button.appendChild(wave);
+
+                setTimeout(() => wave.remove(), 1200);
+            }
+
+            // Create floating bubbles
+            for (let i = 0; i < 8; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'water-bubble';
+                bubble.style.left = (clickX + (Math.random() - 0.5) * 60) + 'px';
+                bubble.style.top = clickY + 'px';
+                bubble.style.animationDelay = (Math.random() * 0.8) + 's';
+                button.appendChild(bubble);
+
+                setTimeout(() => bubble.remove(), 2200);
+            }
+        }
+
+        // Add water effects to buttons
+        document.querySelectorAll('.btn-splash').forEach(button => {
+            button.addEventListener('click', createWaterEffect);
+        });
+
+        // Navigation
+        const sections = {
+            shop: document.getElementById('shopSection'),
+            game: document.getElementById('gameSection'),
+            register: document.getElementById('registerSection'),
+            support: document.getElementById('supportSection')
+        };
+
+        function showSection(sectionName) {
+            Object.values(sections).forEach(section => section.classList.add('hidden'));
+            sections[sectionName].classList.remove('hidden');
+        }
+
+        document.getElementById('shopBtn').addEventListener('click', () => showSection('shop'));
+        document.getElementById('gameBtn').addEventListener('click', () => showSection('game'));
+        document.getElementById('registerBtn').addEventListener('click', () => showSection('register'));
+        document.getElementById('supportBtn').addEventListener('click', () => showSection('support'));
+
+        // Support chat functionality
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessageToChat(message, 'user');
+            input.value = '';
+
+            // Simulate support response
+            setTimeout(() => {
+                const responses = {
+                    'как продать воду?': 'Для продажи воды свяжитесь с нами по телефону или заполните форму на сайте. Мы проведем анализ качества и предложим лучшую цену! 💰',
+                    'какие цены на воду?': 'Цены зависят от качества: Classic - ₽50/л, Premium - ₽120/л, Elite - ₽200/л. Точную стоимость определим после анализа! 💎',
+                    'условия доставки': 'Бесплатный вывоз от 100 литров. Моментальный расчет при приемке. Работаем 24/7! 🚚',
+                    'проблема с игрой': 'Попробуйте обновить страницу или проверьте подключение к интернету. Если проблема сохраняется, опишите её подробнее! 🎮'
+                };
+                
+                const response = responses[message.toLowerCase()] || 
+                    'Спасибо за ваше сообщение! Наш специалист свяжется с вами в ближайшее время. В среднем время ответа составляет 15 минут. 🤖';
+                
+                addMessageToChat(response, 'support');
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function quickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+
+        function addMessageToChat(message, sender) {
+            const chatArea = document.getElementById('chatArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            if (sender === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="flex items-center justify-end mb-2">
+                        <strong>Вы</strong>
+                        <span class="icon-3d ml-2">👤</span>
+                    </div>
+                    ${message}
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="icon-3d mr-2">🤖</span>
+                        <strong>Поддержка AquaPure</strong>
+                    </div>
+                    ${message}
+                `;
+            }
+            
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // Add water effect to new messages
+            setTimeout(() => {
+                for (let i = 0; i < 3; i++) {
+                    const splash = document.createElement('div');
+                    splash.innerHTML = '💧';
+                    splash.style.position = 'absolute';
+                    splash.style.left = Math.random() * 100 + '%';
+                    splash.style.top = '0px';
+                    splash.style.animation = 'waterSplash 0.8s ease-out forwards';
+                    splash.style.animationDelay = (i * 0.2) + 's';
+                    messageDiv.style.position = 'relative';
+                    messageDiv.appendChild(splash);
+                    setTimeout(() => splash.remove(), 1000);
+                }
+            }, 100);
+        }
+
+        // Player Progress System
+        let playerProgress = {
+            bestScore: 0,
+            totalGames: 0,
+            totalScore: 0,
+            achievements: [],
+            level: 1,
+            experience: 0
+        };
+
+        // Load progress (simulated - in real app would use backend)
+        function loadProgress() {
+            try {
+                // Try to use cookies as fallback storage
+                const saved = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('aquapure_progress='));
+                if (saved) {
+                    playerProgress = JSON.parse(decodeURIComponent(saved.split('=')[1]));
+                }
+            } catch (e) {
+                console.log('Using default progress');
+            }
+            updateProgressDisplay();
+        }
+
+        // Save progress (simulated)
+        function saveProgress() {
+            try {
+                // Save to cookies as fallback
+                const progressData = encodeURIComponent(JSON.stringify(playerProgress));
+                document.cookie = `aquapure_progress=${progressData}; max-age=31536000; path=/`;
+                console.log('Прогресс сохранен!');
+            } catch (e) {
+                console.log('Прогресс сохранен в сессии');
+            }
+        }
+
+        // Check and award achievements
+        function checkAchievements(currentScore) {
+            const newAchievements = [];
+            
+            if (currentScore >= 100 && !playerProgress.achievements.includes('first_century')) {
+                playerProgress.achievements.push('first_century');
+                newAchievements.push({ id: 'first_century', name: '💯 Первая сотня', desc: 'Набрать 100+ очков в одной игре' });
+            }
+            
+            if (currentScore >= 200 && !playerProgress.achievements.includes('water_master')) {
+                playerProgress.achievements.push('water_master');
+                newAchievements.push({ id: 'water_master', name: '🏆 Мастер воды', desc: 'Набрать 200+ очков в одной игре' });
+            }
+            
+            if (playerProgress.totalGames >= 10 && !playerProgress.achievements.includes('veteran')) {
+                playerProgress.achievements.push('veteran');
+                newAchievements.push({ id: 'veteran', name: '🎮 Ветеран', desc: 'Сыграть 10 игр' });
+            }
+            
+            if (playerProgress.totalScore >= 1000 && !playerProgress.achievements.includes('collector')) {
+                playerProgress.achievements.push('collector');
+                newAchievements.push({ id: 'collector', name: '💎 Коллекционер', desc: 'Набрать 1000+ общих очков' });
+            }
+
+            return newAchievements;
+        }
+
+        // Calculate level and experience
+        function updateLevel() {
+            const newLevel = Math.floor(playerProgress.totalScore / 500) + 1;
+            if (newLevel > playerProgress.level) {
+                playerProgress.level = newLevel;
+                return true; // Level up!
+            }
+            playerProgress.experience = playerProgress.totalScore % 500;
+            return false;
+        }
+
+        // Game logic
+        let gameActive = false;
+        let score = 0;
+        let gameInterval;
+        let itemInterval;
+        const gameArea = document.getElementById('gameArea');
+        const player = document.getElementById('player');
+        const scoreElement = document.getElementById('score');
+        let playerPosition = 50;
+
+        // Player movement
+        let keys = {};
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // Touch controls for mobile
+        let touchStartX = 0;
+        gameArea.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        gameArea.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touchX = e.touches[0].clientX;
+            const gameRect = gameArea.getBoundingClientRect();
+            const newPosition = ((touchX - gameRect.left) / gameRect.width) * 100;
+            playerPosition = Math.max(0, Math.min(100, newPosition));
+            player.style.left = playerPosition + '%';
+        });
+
+        function updatePlayer() {
+            if (keys['ArrowLeft'] || keys['a']) {
+                playerPosition = Math.max(0, playerPosition - 3);
+            }
+            if (keys['ArrowRight'] || keys['d']) {
+                playerPosition = Math.min(100, playerPosition + 3);
+            }
+            player.style.left = playerPosition + '%';
+        }
+
+        function createFallingItem() {
+            const item = document.createElement('div');
+            item.className = 'falling-item';
+            item.innerHTML = '💧';
+            item.style.left = Math.random() * 90 + '%';
+            item.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            
+            item.addEventListener('click', () => {
+                score += 10;
+                scoreElement.textContent = score;
+                item.remove();
+                
+                // Enhanced splash effect for caught items
+                for (let i = 0; i < 8; i++) {
+                    const splash = document.createElement('div');
+                    splash.innerHTML = ['✨', '💫', '🌟', '💧'][Math.floor(Math.random() * 4)];
+                    splash.style.position = 'absolute';
+                    splash.style.left = item.style.left;
+                    splash.style.top = item.offsetTop + 'px';
+                    splash.style.animation = 'waterSplash 0.8s ease-out forwards';
+                    splash.style.animationDelay = (i * 0.1) + 's';
+                    splash.style.fontSize = '24px';
+                    gameArea.appendChild(splash);
+                    setTimeout(() => splash.remove(), 1000);
+                }
+            });
+
+            gameArea.appendChild(item);
+
+            // Remove item after animation
+            setTimeout(() => {
+                if (item.parentNode) {
+                    item.remove();
+                }
+            }, 5000);
+        }
+
+        function startGame() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            score = 0;
+            scoreElement.textContent = score;
+            document.getElementById('gameInstructions').style.display = 'none';
+            document.getElementById('startGameBtn').textContent = 'Игра идет...';
+            document.getElementById('startGameBtn').disabled = true;
+
+            gameInterval = setInterval(updatePlayer, 16);
+            itemInterval = setInterval(createFallingItem, 1000);
+
+            // End game after 30 seconds
+            setTimeout(() => {
+                endGame();
+            }, 30000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            clearInterval(itemInterval);
+            
+            // Clear falling items
+            document.querySelectorAll('.falling-item').forEach(item => item.remove());
+            
+            // Update progress
+            playerProgress.totalGames++;
+            playerProgress.totalScore += score;
+            
+            // Check for new best score
+            let isNewRecord = false;
+            if (score > playerProgress.bestScore) {
+                playerProgress.bestScore = score;
+                isNewRecord = true;
+            }
+            
+            // Check for level up
+            const leveledUp = updateLevel();
+            
+            // Check achievements
+            const newAchievements = checkAchievements(score);
+            
+            // Save progress
+            saveProgress();
+            updateProgressDisplay();
+            
+            // Show game over message with achievements
+            let message = `Игра окончена! Очки: ${score}`;
+            if (isNewRecord) {
+                message += '\n🎉 НОВЫЙ РЕКОРД!';
+            }
+            if (leveledUp) {
+                message += `\n⭐ НОВЫЙ УРОВЕНЬ: ${playerProgress.level}!`;
+            }
+            if (newAchievements.length > 0) {
+                message += '\n🏆 Новые достижения:';
+                newAchievements.forEach(achievement => {
+                    message += `\n${achievement.name}`;
+                });
+            }
+            
+            document.getElementById('gameInstructions').style.display = 'flex';
+            document.getElementById('gameInstructions').innerHTML = message.replace(/\n/g, '<br>');
+            document.getElementById('startGameBtn').textContent = 'Начать игру';
+            document.getElementById('startGameBtn').disabled = false;
+            
+            // Show achievement notifications
+            showAchievementNotifications(newAchievements, isNewRecord, leveledUp);
+        }
+
+        function showAchievementNotifications(achievements, newRecord, levelUp) {
+            let delay = 1000;
+            
+            if (newRecord) {
+                setTimeout(() => showNotification('🎉 НОВЫЙ РЕКОРД!', 'record'), delay);
+                delay += 1500;
+            }
+            
+            if (levelUp) {
+                setTimeout(() => showNotification(`⭐ УРОВЕНЬ ${playerProgress.level}!`, 'levelup'), delay);
+                delay += 1500;
+            }
+            
+            achievements.forEach((achievement, index) => {
+                setTimeout(() => showNotification(achievement.name, 'achievement'), delay + (index * 1500));
+            });
+        }
+
+        function showNotification(text, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg font-bold text-white transform transition-all duration-500`;
+            
+            switch(type) {
+                case 'record':
+                    notification.classList.add('bg-gradient-to-r', 'from-yellow-400', 'to-orange-500');
+                    break;
+                case 'levelup':
+                    notification.classList.add('bg-gradient-to-r', 'from-purple-500', 'to-pink-500');
+                    break;
+                case 'achievement':
+                    notification.classList.add('bg-gradient-to-r', 'from-green-500', 'to-blue-500');
+                    break;
+            }
+            
+            notification.textContent = text;
+            notification.style.transform = 'translateX(100%)';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        function updateProgressDisplay() {
+            document.getElementById('bestScore').textContent = playerProgress.bestScore;
+            document.getElementById('totalGames').textContent = playerProgress.totalGames;
+            document.getElementById('playerLevel').textContent = playerProgress.level;
+            document.getElementById('totalScore').textContent = playerProgress.totalScore;
+            
+            // Update experience bar
+            const expNeeded = 500;
+            const currentExp = playerProgress.totalScore % expNeeded;
+            const expPercent = (currentExp / expNeeded) * 100;
+            
+            document.getElementById('expText').textContent = `${currentExp}/${expNeeded}`;
+            document.getElementById('expBar').style.width = expPercent + '%';
+            
+            // Update achievements display
+            updateAchievementsDisplay();
+        }
+
+        function updateAchievementsDisplay() {
+            const achievementsList = document.getElementById('achievementsList');
+            
+            const allAchievements = [
+                { id: 'first_century', name: '💯 Первая сотня', desc: 'Набрать 100+ очков в одной игре' },
+                { id: 'water_master', name: '🏆 Мастер воды', desc: 'Набрать 200+ очков в одной игре' },
+                { id: 'veteran', name: '🎮 Ветеран', desc: 'Сыграть 10 игр' },
+                { id: 'collector', name: '💎 Коллекционер', desc: 'Набрать 1000+ общих очков' }
+            ];
+            
+            achievementsList.innerHTML = '';
+            
+            allAchievements.forEach(achievement => {
+                const unlocked = playerProgress.achievements.includes(achievement.id);
+                const achievementDiv = document.createElement('div');
+                achievementDiv.className = `achievement-card p-6 ${unlocked ? 'unlocked' : ''}`;
+                
+                achievementDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <div class="text-3xl icon-3d">${unlocked ? achievement.name.split(' ')[0] : '🔒'}</div>
+                        <div class="flex-1">
+                            <div class="font-bold text-lg ${unlocked ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}">${achievement.name.substring(2)}</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">${achievement.desc}</div>
+                            ${unlocked ? '<div class="text-xs text-green-500 mt-2 font-semibold">✓ РАЗБЛОКИРОВАНО</div>' : '<div class="text-xs text-gray-400 mt-2">🔒 Заблокировано</div>'}
+                        </div>
+                        ${unlocked ? '<div class="text-2xl animate-pulse">✨</div>' : ''}
+                    </div>
+                `;
+                
+                achievementsList.appendChild(achievementDiv);
+            });
+        }
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeToggle.classList.remove('dark');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.classList.add('dark');
+            }
+        }
+
+        document.getElementById('startGameBtn').addEventListener('click', startGame);
+
+        // Registration form
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (username && email && password) {
+                // Create success splash effect
+                const form = this;
+                const rect = form.getBoundingClientRect();
+                
+                for (let i = 0; i < 20; i++) {
+                    const splash = document.createElement('div');
+                    splash.innerHTML = ['🎉', '✨', '💫', '🌟'][Math.floor(Math.random() * 4)];
+                    splash.style.position = 'fixed';
+                    splash.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    splash.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                    splash.style.animation = 'waterSplash 1.5s ease-out forwards';
+                    splash.style.animationDelay = (i * 0.1) + 's';
+                    splash.style.zIndex = '1000';
+                    splash.style.fontSize = '28px';
+                    document.body.appendChild(splash);
+                    setTimeout(() => splash.remove(), 1800);
+                }
+                
+                setTimeout(() => {
+                    alert('Регистрация успешна! Добро пожаловать в AquaPure!');
+                    form.reset();
+                }, 500);
+            }
+        });
+
+        // Initialize player position and load progress
+        player.style.left = playerPosition + '%';
+        loadProgress();
+
+        // Initialize theme toggle
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        
+        // Set initial theme toggle state
+        if (document.documentElement.classList.contains('dark')) {
+            document.getElementById('themeToggle').classList.add('dark');
+        }
+    </script>
+</body>
+</html>
