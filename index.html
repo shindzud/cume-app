@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaPure - Продажа репродуктивного материала</title>
+    <title>AquaPure - Продажа чистой воды</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -12,14 +13,32 @@
             --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
             --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --drop-gradient: linear-gradient(135deg, #667eea 0%, #00f2fe 100%);
+            --star-gradient: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
             --backdrop-blur: 20px;
+            
+            /* Telegram colors */
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --tg-theme-hint-color: #999999;
+            --tg-theme-link-color: #2481cc;
+            --tg-theme-button-color: #2481cc;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #f1f1f1;
         }
 
         [data-theme="dark"] {
             --glass-bg: rgba(0, 0, 0, 0.2);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --tg-theme-bg-color: #17212b;
+            --tg-theme-text-color: #ffffff;
+            --tg-theme-hint-color: #708499;
+            --tg-theme-link-color: #6ab7ff;
+            --tg-theme-button-color: #5288c1;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #232e3c;
         }
 
         @keyframes float {
@@ -87,9 +106,66 @@
             80% { transform: translate(2px, -2px); }
         }
 
+        @keyframes rouletteSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(1800deg); }
+        }
+
+        @keyframes dropAnimation {
+            0% { transform: translateY(-20px) scale(0); opacity: 0; }
+            50% { transform: translateY(0) scale(1.2); opacity: 1; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        @keyframes starAnimation {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from {
+                max-height: 0;
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                max-height: 2000px;
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                max-height: 2000px;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                max-height: 0;
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes chevronRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(180deg); }
+        }
+
+        @keyframes chevronRotateBack {
+            from { transform: rotate(180deg); }
+            to { transform: rotate(0deg); }
+        }
+
         body {
             position: relative;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body::before {
@@ -100,18 +176,19 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
+            opacity: 0.3;
         }
 
         .dark body::before {
             background: 
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.05) 0%, transparent 50%);
         }
 
         .abstract-bg {
@@ -129,12 +206,12 @@
             background: var(--primary-gradient);
             border-radius: 50%;
             animation: float 6s ease-in-out infinite;
-            opacity: 0.1;
+            opacity: 0.03;
         }
 
         .shape-1 {
-            width: 200px;
-            height: 200px;
+            width: 100px;
+            height: 100px;
             top: 10%;
             left: 10%;
             animation-delay: 0s;
@@ -142,8 +219,8 @@
         }
 
         .shape-2 {
-            width: 150px;
-            height: 150px;
+            width: 80px;
+            height: 80px;
             top: 60%;
             right: 15%;
             animation-delay: 2s;
@@ -152,8 +229,8 @@
         }
 
         .shape-3 {
-            width: 100px;
-            height: 100px;
+            width: 60px;
+            height: 60px;
             top: 30%;
             right: 40%;
             animation-delay: 4s;
@@ -165,7 +242,7 @@
             background: var(--glass-bg);
             backdrop-filter: blur(var(--backdrop-blur));
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
+            border-radius: 12px;
             position: relative;
             overflow: hidden;
         }
@@ -177,31 +254,28 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
         }
 
         .nav-glass {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--tg-theme-secondary-bg-color);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark .nav-glass {
-            background: rgba(0, 0, 0, 0.8);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-modern {
             position: relative;
-            background: var(--primary-gradient);
+            background: var(--tg-theme-button-color);
             border: none;
-            border-radius: 12px;
-            color: white;
+            border-radius: 8px;
+            color: var(--tg-theme-button-text-color);
             font-weight: 600;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            touch-action: manipulation;
+            cursor: pointer;
         }
 
         .btn-modern::before {
@@ -215,77 +289,100 @@
             transition: left 0.5s;
         }
 
-        .btn-modern:hover::before {
+        .btn-modern:hover::before,
+        .btn-modern:active::before {
             left: 100%;
         }
 
-        .btn-modern:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        .btn-modern:hover,
+        .btn-modern:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
         .btn-modern:active {
             transform: translateY(0);
         }
 
-        .theme-toggle {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: #ddd;
-            border-radius: 15px;
+        .btn-modern:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .section-header {
+            background: var(--tg-theme-secondary-bg-color);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: none;
+            user-select: none;
+        }
+
+        .section-header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-header.active {
+            border-color: var(--tg-theme-link-color);
+            box-shadow: 0 0 0 1px var(--tg-theme-link-color);
+        }
+
+        .section-content {
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .theme-toggle::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            margin-bottom: 0;
         }
 
-        .theme-toggle.dark {
-            background: var(--primary-gradient);
+        .section-content.expanded {
+            max-height: 5000px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-bottom: 16px;
         }
 
-        .theme-toggle.dark::before {
-            left: 33px;
-            background: #1a1a1a;
+        .chevron {
+            transition: transform 0.3s ease;
+            font-size: 16px;
+        }
+
+        .chevron.rotated {
+            transform: rotate(180deg);
         }
 
         .water-effect {
             position: absolute;
             pointer-events: none;
-            font-size: 32px;
+            font-size: 24px;
             animation: waterSplash 1.2s ease-out forwards;
-            filter: drop-shadow(0 0 15px currentColor);
+            filter: drop-shadow(0 0 10px currentColor);
             z-index: 100;
         }
 
         .water-drop {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             background: var(--accent-gradient);
             border-radius: 50%;
             animation: waterDrop 1.5s ease-out forwards;
-            box-shadow: 0 0 15px rgba(79, 172, 254, 0.8);
+            box-shadow: 0 0 10px rgba(79, 172, 254, 0.6);
             z-index: 99;
         }
 
         .water-wave {
             position: absolute;
-            width: 100px;
-            height: 20px;
+            width: 60px;
+            height: 12px;
             background: linear-gradient(90deg, transparent, rgba(79, 172, 254, 0.6), transparent);
             border-radius: 50%;
             animation: waterWave 1s ease-out forwards;
@@ -294,8 +391,8 @@
 
         .water-bubble {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 5px;
+            height: 5px;
             background: rgba(79, 172, 254, 0.7);
             border-radius: 50%;
             animation: waterBubble 2s ease-out forwards;
@@ -304,65 +401,57 @@
 
         .falling-item {
             position: absolute;
-            font-size: 30px;
+            font-size: 20px;
             animation: fall linear forwards;
             cursor: pointer;
             user-select: none;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
-        .falling-item:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+        .falling-item:hover,
+        .falling-item:active {
+            transform: scale(1.1);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
         }
 
         .game-area {
             position: relative;
             overflow: hidden;
-            height: 400px;
-            border: 2px solid transparent;
-            border-radius: 20px;
-            background: 
-                linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%),
-                linear-gradient(white, white) padding-box,
-                var(--accent-gradient) border-box;
+            height: 300px;
+            border: 2px solid var(--tg-theme-link-color);
+            border-radius: 12px;
+            background: var(--tg-theme-secondary-bg-color);
             backdrop-filter: blur(10px);
-        }
-
-        .dark .game-area {
-            background: 
-                linear-gradient(135deg, rgba(79, 172, 254, 0.05) 0%, rgba(0, 242, 254, 0.05) 100%),
-                linear-gradient(#1a1a1a, #1a1a1a) padding-box,
-                var(--accent-gradient) border-box;
         }
 
         .player {
             position: absolute;
-            bottom: 10px;
-            width: 60px;
-            height: 20px;
-            background: var(--primary-gradient);
-            border-radius: 20px;
+            bottom: 8px;
+            width: 40px;
+            height: 12px;
+            background: var(--tg-theme-button-color);
+            border-radius: 12px;
             transition: left 0.1s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             animation: pulse 2s ease-in-out infinite;
         }
 
         .player::before {
             content: '🏄‍♂️';
             position: absolute;
-            top: -30px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 20px;
+            font-size: 14px;
         }
 
         .product-card {
-            background: var(--glass-bg);
+            background: var(--tg-theme-secondary-bg-color);
             backdrop-filter: blur(var(--backdrop-blur));
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
+            border-radius: 12px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -384,25 +473,23 @@
         }
 
         .product-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.1),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
 
         .stat-card {
-            background: var(--glass-bg);
+            background: var(--tg-theme-secondary-bg-color);
             backdrop-filter: blur(var(--backdrop-blur));
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
+            border-radius: 8px;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .stat-card::after {
@@ -412,14 +499,14 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: var(--primary-gradient);
+            background: var(--tg-theme-link-color);
         }
 
         .achievement-card {
-            background: var(--glass-bg);
+            background: var(--tg-theme-secondary-bg-color);
             backdrop-filter: blur(var(--backdrop-blur));
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: 8px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -438,24 +525,24 @@
             right: 0;
             bottom: 0;
             background: var(--success-gradient);
-            opacity: 0.1;
+            opacity: 0.05;
         }
 
         .achievement-card:hover {
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
 
         .progress-bar {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 6px;
             overflow: hidden;
             position: relative;
         }
 
         .progress-fill {
-            height: 8px;
-            background: var(--accent-gradient);
-            border-radius: 10px;
+            height: 4px;
+            background: var(--tg-theme-link-color);
+            border-radius: 6px;
             transition: width 0.8s ease;
             position: relative;
             overflow: hidden;
@@ -473,11 +560,11 @@
         }
 
         .notification {
-            background: var(--glass-bg);
+            background: var(--tg-theme-secondary-bg-color);
             backdrop-filter: blur(var(--backdrop-blur));
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             animation: glitch 0.5s ease-out;
         }
 
@@ -488,7 +575,7 @@
         }
 
         .icon-3d:hover {
-            transform: rotateY(20deg) rotateX(10deg);
+            transform: rotateY(15deg) rotateX(8deg);
         }
 
         .holographic {
@@ -507,50 +594,214 @@
         }
 
         .glow {
-            box-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
             animation: pulse 2s ease-in-out infinite;
         }
 
         .support-chat {
-            max-height: 400px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
         .message {
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            border-radius: 18px;
-            max-width: 70%;
+            margin-bottom: 6px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            max-width: 85%;
             word-wrap: break-word;
             animation: glitch 0.3s ease-out;
+            font-size: 14px;
         }
 
         .message.user {
-            background: var(--primary-gradient);
-            color: white;
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
             margin-left: auto;
             text-align: right;
         }
 
         .message.support {
-            background: var(--glass-bg);
+            background: var(--tg-theme-secondary-bg-color);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             margin-right: auto;
         }
 
+        .roulette-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .roulette {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--tg-theme-link-color);
+            position: relative;
+            background: conic-gradient(
+                #ff6b6b 0deg 60deg,
+                #4ecdc4 60deg 120deg,
+                #45b7d1 120deg 180deg,
+                #96ceb4 180deg 240deg,
+                #feca57 240deg 300deg,
+                #ff9ff3 300deg 360deg
+            );
+            overflow: hidden;
+        }
+
+        .roulette-pointer {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 16px solid var(--tg-theme-text-color);
+            z-index: 10;
+        }
+
+        .roulette.spinning {
+            animation: rouletteSpin 3s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+        }
+
+        .drop-counter {
+            background: var(--drop-gradient);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: dropAnimation 0.6s ease-out;
+            font-size: 14px;
+        }
+
+        .star-counter {
+            background: var(--star-gradient);
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: starAnimation 0.6s ease-out;
+            font-size: 14px;
+        }
+
+        .withdrawal-card {
+            background: var(--tg-theme-secondary-bg-color);
+            border: 2px solid var(--success-gradient);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .admin-content {
+            max-width: 800px;
+            margin: 20px auto;
+            background: var(--tg-theme-bg-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Telegram specific styles */
+        .tg-viewport {
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* Mobile optimizations for Telegram */
         @media (max-width: 768px) {
             .abstract-shape {
-                opacity: 0.05;
+                opacity: 0.02;
             }
             
             .glass-card {
-                backdrop-filter: blur(10px);
+                backdrop-filter: blur(8px);
+                border-radius: 8px;
+            }
+
+            .game-area {
+                height: 200px;
+            }
+
+            .nav-glass {
+                padding: 8px 12px;
+            }
+
+            .btn-modern {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .product-card {
+                padding: 12px;
+            }
+
+            .stat-card {
+                padding: 8px;
+            }
+
+            .support-chat {
+                max-height: 150px;
+            }
+
+            .roulette {
+                width: 120px;
+                height: 120px;
+            }
+
+            .falling-item {
+                font-size: 16px;
+            }
+
+            .water-effect {
+                font-size: 16px;
+            }
+
+            .section-header {
+                padding: 10px 12px;
+            }
+
+            .drop-counter, .star-counter {
+                font-size: 12px;
+                padding: 4px 8px;
             }
         }
     </style>
 </head>
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors tg-viewport">
     <div class="min-h-screen">
         <!-- Abstract Background -->
         <div class="abstract-bg">
@@ -560,323 +811,468 @@
         </div>
 
         <!-- Navigation -->
-        <nav class="nav-glass text-gray-800 dark:text-white p-4 sticky top-0 z-50">
-            <div class="max-w-4xl mx-auto flex items-center justify-between">
-                <h1 class="text-2xl font-bold flex items-center holographic">
-                    <span class="icon-3d mr-2">💧</span> CumPure
+        <nav class="nav-glass text-gray-800 dark:text-white p-3 sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-2">
+                <h1 class="text-lg md:text-xl font-bold flex items-center holographic">
+                    <span class="icon-3d mr-2">💧</span> AquaPure
                 </h1>
-                <div class="flex items-center space-x-3">
-                    <button id="shopBtn" class="btn-modern px-6 py-2 text-base">
-                        <span class="icon-3d">💰</span> Продажа
+                <div class="flex items-center space-x-2">
+                    <button id="registerBtn" class="btn-modern px-3 py-2 text-sm">
+                        <span class="icon-3d">👤</span> <span class="hidden sm:inline">Профиль</span>
                     </button>
-                    <button id="gameBtn" class="btn-modern px-6 py-2 text-base" style="background: var(--success-gradient);">
-                        <span class="icon-3d">🎮</span> Игра
+                    <button id="supportBtn" class="btn-modern px-3 py-2 text-sm">
+                        <span class="icon-3d">💬</span> <span class="hidden sm:inline">Поддержка</span>
                     </button>
-                    <button id="registerBtn" class="btn-modern px-6 py-2 text-base" style="background: var(--warning-gradient);">
-                        <span class="icon-3d">👤</span> Профиль
-                    </button>
-                    <button id="supportBtn" class="btn-modern px-6 py-2 text-base" style="background: var(--secondary-gradient);">
-                        <span class="icon-3d">💬</span> Поддержка
-                    </button>
-                    <button id="themeToggle" class="theme-toggle" title="Переключить тему">
-                        <span class="sr-only">Переключить тему</span>
+                    <button id="adminBtn" class="btn-modern px-3 py-2 text-sm hidden" style="background: #dc2626;">
+                        <span class="icon-3d">⚙️</span> <span class="hidden sm:inline">Админ</span>
                     </button>
                 </div>
             </div>
         </nav>
 
+        <!-- Counters -->
+        <div class="fixed top-16 right-4 z-40 space-y-2">
+            <div class="drop-counter">
+                <span>💧</span>
+                <span>Drop: <span id="dropCount">0</span></span>
+            </div>
+            <div class="star-counter">
+                <span>⭐</span>
+                <span>Stars: <span id="starCount">0</span></span>
+            </div>
+        </div>
+
         <!-- Main Content -->
-        <div class="max-w-4xl mx-auto p-4">
+        <div class="max-w-6xl mx-auto p-2 md:p-4">
+            
             <!-- Shop Section -->
-            <div id="shopSection" class="space-y-8">
-                <div class="text-center py-12">
-                    <h2 class="text-5xl font-bold mb-6 holographic">Продажа материала</h2>
-                    <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Продайте по лучшим ценам! Мы покупаем любые объемы</p>
-                    <div class="mt-8 flex justify-center">
-                        <div class="w-32 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
+            <div class="mb-4">
+                <div class="section-header p-3 md:p-4" id="shopHeader">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="icon-3d text-xl md:text-2xl">💰</span>
+                            <div>
+                                <h2 class="text-lg md:text-xl font-bold">Продажа чистой воды</h2>
+                                <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Продайте воду по лучшим ценам!</p>
+                            </div>
+                        </div>
+                        <div class="chevron" id="shopChevron">🔽</div>
                     </div>
                 </div>
+                
+                <div class="section-content expanded" id="shopContent">
+                    <div class="space-y-4 md:space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+                            <div class="product-card p-3 md:p-6 group">
+                                <div class="text-3xl md:text-5xl text-center mb-3 md:mb-4 icon-3d">💧</div>
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-blue-500 text-white text-xs rounded-full">
+                                    CLASSIC
+                                </div>
+                                <h3 class="text-base md:text-xl font-bold mb-2 text-center">AquaPure Classic</h3>
+                                <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3 md:mb-4 text-center">Продайте классическую очищенную воду</p>
+                                <div class="space-y-1 md:space-y-2 mb-3 md:mb-4">
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
+                                        pH баланс: 7.0-7.5
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
+                                        Минерализация: 150-300 мг/л
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-lg md:text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">₽50</span>
+                                        <span class="text-xs text-gray-500 ml-1">за литр</span>
+                                    </div>
+                                    <button class="btn-modern px-3 md:px-4 py-2 text-xs md:text-sm btn-splash">
+                                        <span class="icon-3d">💰</span> Продать
+                                    </button>
+                                </div>
+                            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="product-card p-8 group">
-                        <div class="text-6xl text-center mb-6 icon-3d">💧</div>
-                        <div class="absolute top-4 right-4 px-3 py-1 bg-blue-500 text-white text-xs rounded-full">
-                            CLASSIC
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-center">CumPure Classic</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6 text-center">Продайте нам</p>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                pH баланс: 7.0-7.5
+                            <div class="product-card p-3 md:p-6 group glow">
+                                <div class="text-3xl md:text-5xl text-center mb-3 md:mb-4 icon-3d">🌟</div>
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs rounded-full">
+                                    PREMIUM
+                                </div>
+                                <h3 class="text-base md:text-xl font-bold mb-2 text-center">AquaPure Premium</h3>
+                                <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3 md:mb-4 text-center">Продайте премиум воду с минералами</p>
+                                <div class="space-y-1 md:space-y-2 mb-3 md:mb-4">
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
+                                        pH баланс: 8.0-8.5 (щелочная)
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
+                                        Добавлены электролиты
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-lg md:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">₽120</span>
+                                        <span class="text-xs text-gray-500 ml-1">за литр</span>
+                                    </div>
+                                    <button class="btn-modern px-3 md:px-4 py-2 text-xs md:text-sm btn-splash" style="background: var(--warning-gradient);">
+                                        <span class="icon-3d">💎</span> Продать
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                Минерализация: 150-300 мг/л
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">₽50</span>
-                                <span class="text-sm text-gray-500 ml-2">за литр</span>
-                            </div>
-                            <button class="btn-modern px-6 py-3 text-base btn-splash">
-                                <span class="icon-3d">💰</span> Продать
-                            </button>
-                        </div>
-                    </div>
 
-                    <div class="product-card p-8 group glow">
-                        <div class="text-6xl text-center mb-6 icon-3d">🌟</div>
-                        <div class="absolute top-4 right-4 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs rounded-full">
-                            PREMIUM
+                            <div class="product-card p-3 md:p-6 group">
+                                <div class="text-3xl md:text-5xl text-center mb-3 md:mb-4 icon-3d">✨</div>
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs rounded-full">
+                                    ELITE
+                                </div>
+                                <h3 class="text-base md:text-xl font-bold mb-2 text-center">AquaPure Elite</h3>
+                                <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3 md:mb-4 text-center">Продайте элитную артезианскую воду</p>
+                                <div class="space-y-1 md:space-y-2 mb-3 md:mb-4">
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
+                                        Глубина источника: 300м
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
+                                        Редкие минералы
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-lg md:text-2xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">₽200</span>
+                                        <span class="text-xs text-gray-500 ml-1">за литр</span>
+                                    </div>
+                                    <button class="btn-modern px-3 md:px-4 py-2 text-xs md:text-sm btn-splash" style="background: var(--secondary-gradient);">
+                                        <span class="icon-3d">👑</span> Продать
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <h3 class="text-2xl font-bold mb-3 text-center">CumPure Premium</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6 text-center">Продайте премиум материлы по высокой цене! Особенно ценим </p>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                pH баланс: 8.0-8.5 (щелочная)
-                            </div>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                Добавлены электролиты
-                            </div>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                Антиоксидантные свойства
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">₽120</span>
-                                <span class="text-sm text-gray-500 ml-2">за литр</span>
-                            </div>
-                            <button class="btn-modern px-6 py-3 text-base btn-splash" style="background: var(--warning-gradient);">
-                                <span class="icon-3d">💎</span> Продать
-                            </button>
-                        </div>
-                    </div>
 
-                    <div class="product-card p-8 group">
-                        <div class="text-6xl text-center mb-6 icon-3d">✨</div>
-                        <div class="absolute top-4 right-4 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs rounded-full">
-                            ELITE
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-center">AquaPure Elite</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6 text-center">Продайте все анонимно </p>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                аолная анонимность в сети 
+                        <!-- Features Section -->
+                        <div class="glass-card p-3 md:p-6 mt-6 md:mt-8">
+                            <h3 class="text-lg md:text-xl font-bold text-center mb-4 md:mb-6 holographic">Почему продают воду через AquaPure?</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+                                <div class="text-center">
+                                    <div class="text-2xl md:text-3xl mb-2 md:mb-3 icon-3d">💰</div>
+                                    <h4 class="font-semibold mb-1 text-sm md:text-base">Высокие цены</h4>
+                                    <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Лучшие цены на рынке</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl md:text-3xl mb-2 md:mb-3 icon-3d">⚡</div>
+                                    <h4 class="font-semibold mb-1 text-sm md:text-base">Быстрая оплата</h4>
+                                    <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Моментальный расчет</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl md:text-3xl mb-2 md:mb-3 icon-3d">🚚</div>
+                                    <h4 class="font-semibold mb-1 text-sm md:text-base">Бесплатный вывоз</h4>
+                                    <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Забираем бесплатно</p>
+                                </div>
                             </div>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                заберем все сами или же доставкой 
-                            </div>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                дополнительный источник дохода
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">₽200</span>
-                                <span class="text-sm text-gray-500 ml-2">за литр</span>
-                            </div>
-                            <button class="btn-modern px-6 py-3 text-base btn-splash" style="background: var(--secondary-gradient);">
-                                <span class="icon-3d">👑</span> Продать
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Features Section -->
-                <div class="glass-card p-8 mt-12">
-                    <h3 class="text-2xl font-bold text-center mb-8 holographic">Почему продают через CumPure?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="text-center">
-                            <div class="text-4xl mb-4 icon-3d">💰</div>
-                            <h4 class="font-semibold mb-2">Высокие цены</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Лучшие цены на рынке за качество</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-4xl mb-4 icon-3d">⚡</div>
-                            <h4 class="font-semibold mb-2">Быстрая оплата</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Моментальный расчет при приемке товара</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-4xl mb-4 icon-3d">🚚</div>
-                            <h4 class="font-semibold mb-2">Бесплатный вывоз</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Забираем с вашего склада бесплатно</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Game Section -->
-            <div id="gameSection" class="hidden space-y-6">
-                <div class="text-center py-8">
-                    <h2 class="text-3xl font-bold mb-4">Игра "Поймай каплю"</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Ловите падающие капли и зарабатывайте очки!</p>
+            <div class="mb-4">
+                <div class="section-header p-3 md:p-4" id="gameHeader">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="icon-3d text-xl md:text-2xl">🎮</span>
+                            <div>
+                                <h2 class="text-lg md:text-xl font-bold">Игра "Поймай каплю"</h2>
+                                <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Ловите капли и зарабатывайте Drop!</p>
+                            </div>
+                        </div>
+                        <div class="chevron" id="gameChevron">🔽</div>
+                    </div>
                 </div>
+                
+                <div class="section-content collapsed" id="gameContent">
+                    <div class="space-y-3 md:space-y-4">
+                        <div class="glass-card p-3 md:p-6">
+                            <!-- Player Stats -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6 text-center">
+                                <div class="stat-card p-2 md:p-3 group">
+                                    <div class="text-lg md:text-2xl mb-1 icon-3d">🏆</div>
+                                    <div class="text-base md:text-xl font-bold text-blue-600" id="bestScore">0</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 font-medium">Лучший</div>
+                                </div>
+                                <div class="stat-card p-2 md:p-3 group">
+                                    <div class="text-lg md:text-2xl mb-1 icon-3d">🎮</div>
+                                    <div class="text-base md:text-xl font-bold text-green-600" id="totalGames">0</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 font-medium">Игр</div>
+                                </div>
+                                <div class="stat-card p-2 md:p-3 group">
+                                    <div class="text-lg md:text-2xl mb-1 icon-3d">⭐</div>
+                                    <div class="text-base md:text-xl font-bold text-purple-600" id="playerLevel">1</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 font-medium">Уровень</div>
+                                </div>
+                                <div class="stat-card p-2 md:p-3 group">
+                                    <div class="text-lg md:text-2xl mb-1 icon-3d">💧</div>
+                                    <div class="text-base md:text-xl font-bold text-cyan-600" id="totalDrop">0</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 font-medium">Drop</div>
+                                </div>
+                            </div>
 
-                <div class="glass-card p-8">
-                    <!-- Player Stats -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 text-center">
-                        <div class="stat-card p-4 group">
-                            <div class="text-3xl mb-2 icon-3d">🏆</div>
-                            <div class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent" id="bestScore">0</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Лучший результат</div>
-                        </div>
-                        <div class="stat-card p-4 group">
-                            <div class="text-3xl mb-2 icon-3d">🎮</div>
-                            <div class="text-3xl font-bold bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent" id="totalGames">0</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Всего игр</div>
-                        </div>
-                        <div class="stat-card p-4 group">
-                            <div class="text-3xl mb-2 icon-3d">⭐</div>
-                            <div class="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent" id="playerLevel">1</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Уровень</div>
-                        </div>
-                        <div class="stat-card p-4 group">
-                            <div class="text-3xl mb-2 icon-3d">💎</div>
-                            <div class="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent" id="totalScore">0</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Общий счет</div>
+                            <!-- Experience Bar -->
+                            <div class="mb-4 md:mb-6">
+                                <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
+                                    <span class="flex items-center">
+                                        <span class="icon-3d mr-1">✨</span>
+                                        Опыт до следующего уровня
+                                    </span>
+                                    <span id="expText" class="font-bold">0/500</span>
+                                </div>
+                                <div class="progress-bar h-2">
+                                    <div id="expBar" class="progress-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row justify-between items-center mb-3 md:mb-4 gap-2">
+                                <div class="text-base md:text-lg font-bold">
+                                    <span class="icon-3d mr-1">🎯</span>
+                                    Очки: 
+                                    <span id="score" class="text-blue-600">0</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button id="startGameBtn" class="btn-modern px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-bold btn-splash glow" style="background: var(--success-gradient);">
+                                        <span class="icon-3d mr-1">🚀</span>
+                                        Начать игру
+                                    </button>
+                                    <button id="withdrawBtn" class="btn-modern px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-bold btn-splash" style="background: var(--warning-gradient);">
+                                        <span class="icon-3d mr-1">💸</span>
+                                        Вывод
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="gameArea" class="game-area">
+                                <div id="player" class="player"></div>
+                                <div id="gameInstructions" class="absolute inset-0 flex items-center justify-center text-sm md:text-base font-semibold px-4">
+                                    Нажмите "Начать игру" чтобы играть
+                                </div>
+                            </div>
+
+                            <!-- Withdrawal Section -->
+                            <div id="withdrawalSection" class="hidden">
+                                <div class="withdrawal-card">
+                                    <h4 class="text-lg font-bold mb-3 text-center">💸 Вывод Drop очков</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 text-center">
+                                        Минимальная сумма для вывода: 1000 Drop
+                                    </p>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Сумма вывода (Drop)</label>
+                                            <input type="number" id="withdrawAmount" min="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" placeholder="1000">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Способ вывода</label>
+                                            <select id="withdrawMethod" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base">
+                                                <option value="telegram">Telegram Wallet</option>
+                                                <option value="ton">TON Wallet</option>
+                                                <option value="card">Банковская карта</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Реквизиты</label>
+                                            <input type="text" id="withdrawDetails" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" placeholder="Введите реквизиты">
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button id="submitWithdrawBtn" class="btn-modern flex-1 py-3 font-bold btn-splash" style="background: var(--success-gradient);">
+                                                <span class="icon-3d mr-1">✅</span>
+                                                Отправить заявку
+                                            </button>
+                                            <button id="cancelWithdrawBtn" class="btn-modern flex-1 py-3 font-bold" style="background: #6b7280;">
+                                                <span class="icon-3d mr-1">❌</span>
+                                                Отмена
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Achievements -->
+                            <div class="mt-6 md:mt-8">
+                                <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4 text-center holographic">
+                                    <span class="icon-3d mr-1">🏆</span>
+                                    Достижения
+                                </h3>
+                                <div id="achievementsList" class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <!-- Achievements will be populated here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Experience Bar -->
-                    <div class="mb-8">
-                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-3 font-medium">
-                            <span class="flex items-center">
-                                <span class="icon-3d mr-2">✨</span>
-                                Опыт до следующего уровня
-                            </span>
-                            <span id="expText" class="font-bold">0/500</span>
+            <!-- Roulette Section -->
+            <div class="mb-4">
+                <div class="section-header p-3 md:p-4" id="rouletteHeader">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="icon-3d text-xl md:text-2xl">🎯</span>
+                            <div>
+                                <h2 class="text-lg md:text-xl font-bold">Рулетка удачи</h2>
+                                <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Крутите за звезды Telegram!</p>
+                            </div>
                         </div>
-                        <div class="progress-bar h-3">
-                            <div id="expBar" class="progress-fill" style="width: 0%"></div>
-                        </div>
+                        <div class="chevron" id="rouletteChevron">🔽</div>
                     </div>
+                </div>
+                
+                <div class="section-content collapsed" id="rouletteContent">
+                    <div class="space-y-3 md:space-y-4">
+                        <div class="max-w-md mx-auto glass-card p-4 md:p-6">
+                            <div class="roulette-container">
+                                <div class="roulette" id="roulette">
+                                    <div class="roulette-pointer"></div>
+                                    <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xs md:text-sm">
+                                        SPIN
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 text-center space-y-3">
+                                    <div class="flex justify-center gap-2">
+                                        <button id="spinFreeBtn" class="btn-modern px-4 py-2 text-sm font-bold btn-splash" style="background: var(--success-gradient);">
+                                            <span class="icon-3d mr-1">🆓</span>
+                                            Бесплатно (24ч)
+                                        </button>
+                                        <button id="spinStarBtn" class="btn-modern px-4 py-2 text-sm font-bold btn-splash" style="background: var(--star-gradient); color: #333;">
+                                            <span class="icon-3d mr-1">⭐</span>
+                                            1 Star
+                                        </button>
+                                    </div>
+                                    
+                                    <div id="spinTimer" class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+                                        <!-- Timer will be shown here -->
+                                    </div>
 
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="text-2xl font-bold">
-                            <span class="icon-3d mr-2">🎯</span>
-                            Текущие очки: 
-                            <span id="score" class="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">0</span>
-                        </div>
-                        <button id="startGameBtn" class="btn-modern px-8 py-4 text-lg font-bold btn-splash glow" style="background: var(--success-gradient);">
-                            <span class="icon-3d mr-2">🚀</span>
-                            Начать игру
-                        </button>
-                    </div>
+                                    <button id="buyStarsBtn" class="btn-modern px-4 py-2 text-sm font-bold btn-splash" style="background: var(--warning-gradient);">
+                                        <span class="icon-3d mr-1">💳</span>
+                                        Купить звезды
+                                    </button>
+                                </div>
 
-                    <div id="gameArea" class="game-area bg-gradient-to-b from-sky-200 to-blue-300 dark:from-sky-800 dark:to-blue-900">
-                        <div id="player" class="player"></div>
-                        <div id="gameInstructions" class="absolute inset-0 flex items-center justify-center text-xl font-semibold">
-                            Нажмите "Начать игру" чтобы играть
-                        </div>
-                    </div>
-
-                    <!-- Achievements -->
-                    <div class="mt-10">
-                        <h3 class="text-2xl font-bold mb-6 text-center holographic">
-                            <span class="icon-3d mr-2">🏆</span>
-                            Достижения
-                        </h3>
-                        <div id="achievementsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Achievements will be populated here -->
+                                <div class="mt-4 text-center">
+                                    <h4 class="font-semibold mb-2 text-sm">Возможные призы:</h4>
+                                    <div class="grid grid-cols-2 gap-1 text-xs">
+                                        <div class="flex items-center justify-center p-1 bg-red-100 dark:bg-red-900 rounded text-xs">
+                                            🔴 10 Drop
+                                        </div>
+                                        <div class="flex items-center justify-center p-1 bg-teal-100 dark:bg-teal-900 rounded text-xs">
+                                            🟢 25 Drop
+                                        </div>
+                                        <div class="flex items-center justify-center p-1 bg-blue-100 dark:bg-blue-900 rounded text-xs">
+                                            🔵 50 Drop
+                                        </div>
+                                        <div class="flex items-center justify-center p-1 bg-green-100 dark:bg-green-900 rounded text-xs">
+                                            🟢 100 Drop
+                                        </div>
+                                        <div class="flex items-center justify-center p-1 bg-yellow-100 dark:bg-yellow-900 rounded text-xs">
+                                            🟡 200 Drop
+                                        </div>
+                                        <div class="flex items-center justify-center p-1 bg-pink-100 dark:bg-pink-900 rounded text-xs">
+                                            🔴 500 Drop
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Registration Section -->
-            <div id="registerSection" class="hidden space-y-6">
-                <div class="text-center py-8">
-                    <h2 class="text-3xl font-bold mb-4">Регистрация</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Создайте аккаунт для доступа ко всем функциям</p>
+            <div id="registerSection" class="hidden space-y-3 md:space-y-4">
+                <div class="text-center py-4 md:py-6">
+                    <h2 class="text-xl md:text-2xl font-bold mb-2 md:mb-3">Профиль пользователя</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Ваша информация в Telegram</p>
                 </div>
 
-                <div class="max-w-md mx-auto glass-card p-8">
-                    <form id="registerForm" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Имя пользователя</label>
-                            <input type="text" id="username" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" required>
+                <div class="max-w-sm mx-auto glass-card p-4 md:p-6">
+                    <div id="userProfile" class="space-y-3">
+                        <div class="text-center">
+                            <div id="userAvatar" class="w-16 h-16 mx-auto mb-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                👤
+                            </div>
+                            <h3 id="userName" class="text-lg font-bold">Загрузка...</h3>
+                            <p id="userInfo" class="text-sm text-gray-600 dark:text-gray-400">@username</p>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Email</label>
-                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" required>
+                        
+                        <div class="border-t pt-3">
+                            <div class="grid grid-cols-2 gap-3 text-center">
+                                <div>
+                                    <div class="text-lg font-bold text-blue-600" id="profileDrops">0</div>
+                                    <div class="text-xs text-gray-500">Drop очков</div>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-yellow-600" id="profileStars">0</div>
+                                    <div class="text-xs text-gray-500">Звезд</div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Пароль</label>
-                            <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base" required>
-                        </div>
-                        <button type="submit" class="btn-modern w-full py-4 font-bold text-lg btn-splash" style="background: var(--secondary-gradient);">
-                            <span class="icon-3d mr-2">✨</span>
-                            Зарегистрироваться
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
 
             <!-- Support Section -->
-            <div id="supportSection" class="hidden space-y-6">
-                <div class="text-center py-8">
-                    <h2 class="text-3xl font-bold mb-4 holographic">Поддержка пользователей</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Напишите нам, и мы поможем решить любой вопрос!</p>
+            <div id="supportSection" class="hidden space-y-3 md:space-y-4">
+                <div class="text-center py-4 md:py-6">
+                    <h2 class="text-xl md:text-2xl font-bold mb-2 md:mb-3 holographic">Поддержка пользователей</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Напишите нам, и мы поможем!</p>
                 </div>
 
-                <div class="max-w-2xl mx-auto glass-card p-8">
-                    <div class="support-chat bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6" id="chatArea">
+                <div class="max-w-2xl mx-auto glass-card p-3 md:p-6">
+                    <div class="support-chat bg-gray-50 dark:bg-gray-800 rounded-lg p-3 mb-3" id="chatArea">
                         <div class="message support">
-                            <div class="flex items-center mb-2">
-                                <span class="icon-3d mr-2">🤖</span>
-                                <strong>Поддержка AquaPure</strong>
+                            <div class="flex items-center mb-1">
+                                <span class="icon-3d mr-1 text-sm">🤖</span>
+                                <strong class="text-sm">Поддержка AquaPure</strong>
                             </div>
-                            Здравствуйте! Как дела? Чем можем помочь? 💧
+                            <div class="text-sm">Здравствуйте! Чем можем помочь? 💧</div>
                         </div>
                     </div>
 
-                    <div class="flex space-x-3">
+                    <div class="flex space-x-2">
                         <input 
                             type="text" 
                             id="messageInput" 
-                            placeholder="Напишите ваше сообщение..." 
-                            class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base"
+                            placeholder="Напишите сообщение..." 
+                            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-sm"
                             onkeypress="if(event.key==='Enter') sendMessage()"
                         >
                         <button 
                             onclick="sendMessage()" 
-                            class="btn-modern px-6 py-3 text-base btn-splash" 
+                            class="btn-modern px-3 py-2 text-sm btn-splash" 
                             style="background: var(--success-gradient);"
                         >
-                            <span class="icon-3d">📤</span> Отправить
+                            <span class="icon-3d">📤</span>
                         </button>
                     </div>
 
                     <!-- Быстрые ответы -->
-                    <div class="mt-6">
-                        <h4 class="font-semibold mb-3 flex items-center">
-                            <span class="icon-3d mr-2">⚡</span>
+                    <div class="mt-3">
+                        <h4 class="font-semibold mb-2 flex items-center text-sm">
+                            <span class="icon-3d mr-1">⚡</span>
                             Быстрые вопросы
                         </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <button onclick="quickMessage('Как продать воду?')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <span class="icon-3d mr-2">💰</span>
-                                Как продать ?
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <button onclick="quickMessage('Как продать воду?')" class="glass-card p-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm">
+                                <span class="icon-3d mr-1 text-xs">💰</span>
+                                Как продать воду?
                             </button>
-                            <button onclick="quickMessage('Какие цены на воду?')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <span class="icon-3d mr-2">💎</span>
-                                Какие цены ?
+                            <button onclick="quickMessage('Какие цены на воду?')" class="glass-card p-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm">
+                                <span class="icon-3d mr-1 text-xs">💎</span>
+                                Какие цены на воду?
                             </button>
-                            <button onclick="quickMessage('Условия доставки')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <span class="icon-3d mr-2">🚚</span>
+                            <button onclick="quickMessage('Условия доставки')" class="glass-card p-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm">
+                                <span class="icon-3d mr-1 text-xs">🚚</span>
                                 Условия доставки
                             </button>
-                            <button onclick="quickMessage('Проблема с игрой')" class="glass-card p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <span class="icon-3d mr-2">🎮</span>
+                            <button onclick="quickMessage('Проблема с игрой')" class="glass-card p-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm">
+                                <span class="icon-3d mr-1 text-xs">🎮</span>
                                 Проблема с игрой
                             </button>
                         </div>
@@ -886,18 +1282,347 @@
         </div>
     </div>
 
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">🔧 Панель администратора</h2>
+                <button id="closeAdminBtn" class="btn-modern px-4 py-2">
+                    ❌ Закрыть
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- User Management -->
+                <div class="glass-card p-4">
+                    <h3 class="text-lg font-bold mb-4">👥 Управление пользователями</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-2">
+                            <input type="text" id="searchUser" placeholder="Поиск пользователя..." class="flex-1 px-3 py-2 border rounded-lg text-sm">
+                            <button id="searchUserBtn" class="btn-modern px-3 py-2 text-sm">🔍</button>
+                        </div>
+                        <div class="user-list" id="userList">
+                            <!-- Users will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="glass-card p-4">
+                    <h3 class="text-lg font-bold mb-4">📊 Статистика</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span>Всего пользователей:</span>
+                            <span id="totalUsers" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Активных сегодня:</span>
+                            <span id="activeUsers" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Всего Drop роздано:</span>
+                            <span id="totalDropsGiven" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Звезд потрачено:</span>
+                            <span id="totalStarsSpent" class="font-bold">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Actions -->
+                <div class="glass-card p-4">
+                    <h3 class="text-lg font-bold mb-4">⚙️ Действия</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">User ID:</label>
+                            <input type="text" id="actionUserId" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Telegram User ID">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Количество Drop:</label>
+                            <input type="number" id="actionDropAmount" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="100">
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="giveDropBtn" class="btn-modern flex-1 py-2 text-sm" style="background: var(--success-gradient);">
+                                ➕ Дать Drop
+                            </button>
+                            <button id="removeDropBtn" class="btn-modern flex-1 py-2 text-sm" style="background: #dc2626;">
+                                ➖ Забрать Drop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Withdrawal Requests -->
+                <div class="glass-card p-4">
+                    <h3 class="text-lg font-bold mb-4">💸 Заявки на вывод</h3>
+                    <div id="withdrawalRequests" class="space-y-2">
+                        <!-- Withdrawal requests will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Dark mode detection
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            if (event.matches) {
+        // Telegram WebApp Integration
+        let tg = window.Telegram?.WebApp;
+        let user = null;
+
+        // Initialize Telegram WebApp
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            user = tg.initDataUnsafe?.user;
+            
+            // Set theme based on Telegram
+            if (tg.colorScheme === 'dark') {
                 document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
             }
-        });
+
+            // Apply Telegram theme colors
+            if (tg.themeParams) {
+                const root = document.documentElement;
+                Object.keys(tg.themeParams).forEach(key => {
+                    root.style.setProperty(`--tg-theme-${key.replace(/_/g, '-')}`, tg.themeParams[key]);
+                });
+            }
+
+            // Handle theme changes
+            tg.onEvent('themeChanged', function() {
+                if (tg.colorScheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+        }
+
+        // Enhanced Database System
+        class AquaPureDB {
+            constructor() {
+                this.prefix = 'aquapure_';
+                this.serverUrl = 'https://your-server.com/api'; // Replace with actual server
+            }
+
+            save(key, data) {
+                try {
+                    localStorage.setItem(this.prefix + key, JSON.stringify(data));
+                    // Also sync to server if user is authenticated
+                    if (user) {
+                        this.syncToServer(key, data);
+                    }
+                    return true;
+                } catch (e) {
+                    console.error('Ошибка сохранения данных:', e);
+                    return false;
+                }
+            }
+
+            load(key, defaultValue = null) {
+                try {
+                    const data = localStorage.getItem(this.prefix + key);
+                    return data ? JSON.parse(data) : defaultValue;
+                } catch (e) {
+                    console.error('Ошибка загрузки данных:', e);
+                    return defaultValue;
+                }
+            }
+
+            async syncToServer(key, data) {
+                if (!user) return;
+                
+                try {
+                    const response = await fetch(`${this.serverUrl}/save`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            userId: user.id,
+                            key: key,
+                            data: data,
+                            timestamp: Date.now()
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        console.log('Данные синхронизированы с сервером');
+                    }
+                } catch (error) {
+                    console.error('Ошибка синхронизации с сервером:', error);
+                }
+            }
+
+            async loadFromServer(key) {
+                if (!user) return null;
+                
+                try {
+                    const response = await fetch(`${this.serverUrl}/load`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            userId: user.id,
+                            key: key
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        return result.data;
+                    }
+                } catch (error) {
+                    console.error('Ошибка загрузки с сервера:', error);
+                }
+                return null;
+            }
+
+            async saveUser(userData) {
+                if (!user) return;
+                
+                try {
+                    const response = await fetch(`${this.serverUrl}/users`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            userId: user.id,
+                            username: user.username,
+                            firstName: user.first_name,
+                            lastName: user.last_name,
+                            languageCode: user.language_code,
+                            ...userData,
+                            lastActive: Date.now()
+                        })
+                    });
+                    
+                    return response.ok;
+                } catch (error) {
+                    console.error('Ошибка сохранения пользователя:', error);
+                    return false;
+                }
+            }
+
+            async getUsers() {
+                try {
+                    const response = await fetch(`${this.serverUrl}/users`);
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (error) {
+                    console.error('Ошибка получения пользователей:', error);
+                }
+                return [];
+            }
+
+            async updateUserBalance(userId, dropAmount, starAmount = 0) {
+                try {
+                    const response = await fetch(`${this.serverUrl}/balance`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            userId: userId,
+                            dropAmount: dropAmount,
+                            starAmount: starAmount,
+                            timestamp: Date.now()
+                        })
+                    });
+                    
+                    return response.ok;
+                } catch (error) {
+                    console.error('Ошибка обновления баланса:', error);
+                    return false;
+                }
+            }
+
+            async saveWithdrawalRequest(request) {
+                try {
+                    const response = await fetch(`${this.serverUrl}/withdrawals`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            ...request,
+                            userId: user.id,
+                            username: user.username,
+                            timestamp: Date.now(),
+                            status: 'pending'
+                        })
+                    });
+                    
+                    return response.ok;
+                } catch (error) {
+                    console.error('Ошибка сохранения заявки на вывод:', error);
+                    return false;
+                }
+            }
+        }
+
+        // Initialize Database
+        const db = new AquaPureDB();
+
+        // Section Collapse System
+        const sectionStates = {
+            shop: { header: 'shopHeader', content: 'shopContent', chevron: 'shopChevron', expanded: true },
+            game: { header: 'gameHeader', content: 'gameContent', chevron: 'gameChevron', expanded: false },
+            roulette: { header: 'rouletteHeader', content: 'rouletteContent', chevron: 'rouletteChevron', expanded: false }
+        };
+
+        function toggleSection(sectionName) {
+            const section = sectionStates[sectionName];
+            const content = document.getElementById(section.content);
+            const chevron = document.getElementById(section.chevron);
+            const header = document.getElementById(section.header);
+            
+            if (section.expanded) {
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
+                chevron.classList.remove('rotated');
+                chevron.textContent = '🔽';
+                header.classList.remove('active');
+                section.expanded = false;
+            } else {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                chevron.classList.add('rotated');
+                chevron.textContent = '🔼';
+                header.classList.add('active');
+                section.expanded = true;
+            }
+            
+            saveSectionStates();
+        }
+
+        function saveSectionStates() {
+            const states = {};
+            Object.keys(sectionStates).forEach(key => {
+                states[key] = sectionStates[key].expanded;
+            });
+            db.save('sectionStates', states);
+        }
+
+        function loadSectionStates() {
+            const savedStates = db.load('sectionStates', {});
+            
+            Object.keys(sectionStates).forEach(key => {
+                if (savedStates.hasOwnProperty(key)) {
+                    sectionStates[key].expanded = !savedStates[key];
+                    toggleSection(key);
+                }
+            });
+        }
+
+        // Initialize section toggles
+        document.getElementById('shopHeader').addEventListener('click', () => toggleSection('shop'));
+        document.getElementById('gameHeader').addEventListener('click', () => toggleSection('game'));
+        document.getElementById('rouletteHeader').addEventListener('click', () => toggleSection('roulette'));
 
         // Enhanced water splash effect
         function createWaterEffect(e) {
@@ -906,39 +1631,34 @@
             const clickX = e.clientX - rect.left;
             const clickY = e.clientY - rect.top;
             
-            // Create main splash effect with more particles
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 8; i++) {
                 const splash = document.createElement('div');
                 splash.className = 'water-effect';
-                splash.innerHTML = ['💧', '🌊', '💦', '✨'][Math.floor(Math.random() * 4)];
+                splash.innerHTML = ['💧', '💦', '✨'][Math.floor(Math.random() * 3)];
                 splash.style.left = clickX + 'px';
                 splash.style.top = clickY + 'px';
                 splash.style.animationDelay = (i * 0.08) + 's';
-                splash.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                splash.style.fontSize = (Math.random() * 12 + 12) + 'px';
                 button.appendChild(splash);
 
                 setTimeout(() => splash.remove(), 1400);
             }
 
-            // Create enhanced water drops
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 10; i++) {
                 const drop = document.createElement('div');
                 drop.className = 'water-drop';
-                drop.style.left = (clickX + (Math.random() - 0.5) * 80) + 'px';
+                drop.style.left = (clickX + (Math.random() - 0.5) * 40) + 'px';
                 drop.style.top = clickY + 'px';
                 drop.style.animationDelay = (Math.random() * 0.6) + 's';
-                drop.style.width = (Math.random() * 8 + 8) + 'px';
-                drop.style.height = (Math.random() * 8 + 8) + 'px';
                 button.appendChild(drop);
 
                 setTimeout(() => drop.remove(), 1800);
             }
 
-            // Create water waves
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) {
                 const wave = document.createElement('div');
                 wave.className = 'water-wave';
-                wave.style.left = (clickX - 50) + 'px';
+                wave.style.left = (clickX - 30) + 'px';
                 wave.style.top = clickY + 'px';
                 wave.style.animationDelay = (i * 0.2) + 's';
                 button.appendChild(wave);
@@ -946,11 +1666,10 @@
                 setTimeout(() => wave.remove(), 1200);
             }
 
-            // Create floating bubbles
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 4; i++) {
                 const bubble = document.createElement('div');
                 bubble.className = 'water-bubble';
-                bubble.style.left = (clickX + (Math.random() - 0.5) * 60) + 'px';
+                bubble.style.left = (clickX + (Math.random() - 0.5) * 30) + 'px';
                 bubble.style.top = clickY + 'px';
                 bubble.style.animationDelay = (Math.random() * 0.8) + 's';
                 button.appendChild(bubble);
@@ -966,21 +1685,277 @@
 
         // Navigation
         const sections = {
-            shop: document.getElementById('shopSection'),
-            game: document.getElementById('gameSection'),
             register: document.getElementById('registerSection'),
             support: document.getElementById('supportSection')
         };
 
         function showSection(sectionName) {
             Object.values(sections).forEach(section => section.classList.add('hidden'));
-            sections[sectionName].classList.remove('hidden');
+            if (sections[sectionName]) {
+                sections[sectionName].classList.remove('hidden');
+            }
         }
 
-        document.getElementById('shopBtn').addEventListener('click', () => showSection('shop'));
-        document.getElementById('gameBtn').addEventListener('click', () => showSection('game'));
         document.getElementById('registerBtn').addEventListener('click', () => showSection('register'));
         document.getElementById('supportBtn').addEventListener('click', () => showSection('support'));
+
+        // Player Progress System
+        let playerProgress = {
+            bestScore: 0,
+            totalGames: 0,
+            totalScore: 0,
+            dropCount: 0,
+            starCount: 0,
+            achievements: [],
+            level: 1,
+            experience: 0,
+            lastSpinTime: 0
+        };
+
+        // Load progress
+        async function loadProgress() {
+            // First try to load from server
+            if (user) {
+                const serverData = await db.loadFromServer('progress');
+                if (serverData) {
+                    playerProgress = { ...playerProgress, ...serverData };
+                } else {
+                    // Fallback to local storage
+                    const saved = db.load('progress', playerProgress);
+                    playerProgress = { ...playerProgress, ...saved };
+                }
+            } else {
+                const saved = db.load('progress', playerProgress);
+                playerProgress = { ...playerProgress, ...saved };
+            }
+            
+            updateProgressDisplay();
+            updateDropCounter();
+            updateStarCounter();
+            updateSpinTimer();
+        }
+
+        // Save progress
+        function saveProgress() {
+            if (db.save('progress', playerProgress)) {
+                console.log('Прогресс сохранен!');
+            }
+        }
+
+        // Drop Counter System
+        function addDrops(amount) {
+            playerProgress.dropCount += amount;
+            updateDropCounter();
+            saveProgress();
+            
+            // Update server
+            if (user) {
+                db.updateUserBalance(user.id, amount, 0);
+            }
+            
+            const counter = document.getElementById('dropCount');
+            counter.style.animation = 'dropAnimation 0.6s ease-out';
+            setTimeout(() => {
+                counter.style.animation = '';
+            }, 600);
+        }
+
+        function updateDropCounter() {
+            document.getElementById('dropCount').textContent = playerProgress.dropCount;
+            document.getElementById('profileDrops').textContent = playerProgress.dropCount;
+        }
+
+        // Star Counter System
+        function addStars(amount) {
+            playerProgress.starCount += amount;
+            updateStarCounter();
+            saveProgress();
+            
+            if (user) {
+                db.updateUserBalance(user.id, 0, amount);
+            }
+            
+            const counter = document.getElementById('starCount');
+            counter.style.animation = 'starAnimation 0.6s ease-out';
+            setTimeout(() => {
+                counter.style.animation = '';
+            }, 600);
+        }
+
+        function updateStarCounter() {
+            document.getElementById('starCount').textContent = playerProgress.starCount;
+            document.getElementById('profileStars').textContent = playerProgress.starCount;
+        }
+
+        // Telegram Stars Purchase
+        function buyStars() {
+            if (tg) {
+                // Open Telegram Stars purchase flow
+                tg.openInvoice({
+                    title: 'Покупка звезд AquaPure',
+                    description: 'Звезды для игры в рулетку',
+                    currency: 'XTR', // Telegram Stars
+                    amount: 1, // 1 Star
+                    provider_token: '', // Your payment provider token
+                    start_parameter: 'stars_purchase'
+                }, (status) => {
+                    if (status === 'paid') {
+                        addStars(1);
+                        showNotification('⭐ Вы купили 1 звезду!', 'star');
+                    }
+                });
+            } else {
+                // Fallback for testing
+                addStars(1);
+                showNotification('⭐ Вы получили 1 звезду! (тестовый режим)', 'star');
+            }
+        }
+
+        // Roulette System
+        let isSpinning = false;
+        const spinCooldown = 24 * 60 * 60 * 1000;
+
+        function canSpin() {
+            const now = Date.now();
+            const timeSinceLastSpin = now - playerProgress.lastSpinTime;
+            return timeSinceLastSpin >= spinCooldown;
+        }
+
+        function updateSpinTimer() {
+            const now = Date.now();
+            const timeSinceLastSpin = now - playerProgress.lastSpinTime;
+            const timeRemaining = spinCooldown - timeSinceLastSpin;
+            
+            const freeBtn = document.getElementById('spinFreeBtn');
+            const timerEl = document.getElementById('spinTimer');
+            
+            if (canSpin()) {
+                freeBtn.disabled = false;
+                freeBtn.innerHTML = '<span class="icon-3d mr-1">🆓</span>Бесплатно';
+                timerEl.textContent = 'Бесплатное вращение доступно!';
+                timerEl.className = 'text-xs md:text-sm text-green-600 dark:text-green-400';
+            } else {
+                freeBtn.disabled = true;
+                const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                
+                freeBtn.innerHTML = '<span class="icon-3d mr-1">⏰</span>Ожидание';
+                timerEl.textContent = `До бесплатного: ${hours}ч ${minutes}м ${seconds}с`;
+                timerEl.className = 'text-xs md:text-sm text-red-600 dark:text-red-400';
+            }
+        }
+
+        function spinRoulette(type = 'free') {
+            if (isSpinning) return;
+            
+            if (type === 'free' && !canSpin()) {
+                showNotification('❌ Бесплатное вращение недоступно!', 'error');
+                return;
+            }
+            
+            if (type === 'star' && playerProgress.starCount < 1) {
+                showNotification('❌ Недостаточно звезд!', 'error');
+                return;
+            }
+            
+            isSpinning = true;
+            const roulette = document.getElementById('roulette');
+            
+            if (type === 'star') {
+                playerProgress.starCount -= 1;
+                updateStarCounter();
+            }
+            
+            roulette.classList.add('spinning');
+            
+            setTimeout(() => {
+                const prizes = [10, 25, 50, 100, 200, 500];
+                const prize = prizes[Math.floor(Math.random() * prizes.length)];
+                
+                addDrops(prize);
+                
+                if (type === 'free') {
+                    playerProgress.lastSpinTime = Date.now();
+                }
+                
+                saveProgress();
+                
+                showNotification(`🎉 Вы выиграли ${prize} Drop!`, 'roulette');
+                
+                roulette.classList.remove('spinning');
+                isSpinning = false;
+                updateSpinTimer();
+            }, 3000);
+        }
+
+        // Set up roulette buttons
+        document.getElementById('spinFreeBtn').addEventListener('click', () => spinRoulette('free'));
+        document.getElementById('spinStarBtn').addEventListener('click', () => spinRoulette('star'));
+        document.getElementById('buyStarsBtn').addEventListener('click', buyStars);
+
+        setInterval(updateSpinTimer, 1000);
+
+        // Withdrawal System
+        document.getElementById('withdrawBtn').addEventListener('click', function() {
+            const withdrawalSection = document.getElementById('withdrawalSection');
+            if (withdrawalSection.classList.contains('hidden')) {
+                withdrawalSection.classList.remove('hidden');
+                this.textContent = '❌ Закрыть';
+            } else {
+                withdrawalSection.classList.add('hidden');
+                this.innerHTML = '<span class="icon-3d mr-1">💸</span>Вывод';
+            }
+        });
+
+        document.getElementById('cancelWithdrawBtn').addEventListener('click', function() {
+            document.getElementById('withdrawalSection').classList.add('hidden');
+            document.getElementById('withdrawBtn').innerHTML = '<span class="icon-3d mr-1">💸</span>Вывод';
+        });
+
+        document.getElementById('submitWithdrawBtn').addEventListener('click', async function() {
+            const amount = parseInt(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('withdrawMethod').value;
+            const details = document.getElementById('withdrawDetails').value;
+            
+            if (!amount || amount < 1000) {
+                showNotification('❌ Минимальная сумма: 1000 Drop', 'error');
+                return;
+            }
+            
+            if (amount > playerProgress.dropCount) {
+                showNotification('❌ Недостаточно Drop очков', 'error');
+                return;
+            }
+            
+            if (!details) {
+                showNotification('❌ Укажите реквизиты', 'error');
+                return;
+            }
+            
+            const request = {
+                amount: amount,
+                method: method,
+                details: details
+            };
+            
+            if (await db.saveWithdrawalRequest(request)) {
+                // Deduct from balance
+                playerProgress.dropCount -= amount;
+                updateDropCounter();
+                saveProgress();
+                
+                showNotification('✅ Заявка на вывод отправлена!', 'success');
+                
+                // Clear form
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('withdrawDetails').value = '';
+                document.getElementById('withdrawalSection').classList.add('hidden');
+                document.getElementById('withdrawBtn').innerHTML = '<span class="icon-3d mr-1">💸</span>Вывод';
+            } else {
+                showNotification('❌ Ошибка отправки заявки', 'error');
+            }
+        });
 
         // Support chat functionality
         function sendMessage() {
@@ -991,7 +1966,6 @@
             addMessageToChat(message, 'user');
             input.value = '';
 
-            // Simulate support response
             setTimeout(() => {
                 const responses = {
                     'как продать воду?': 'Для продажи воды свяжитесь с нами по телефону или заполните форму на сайте. Мы проведем анализ качества и предложим лучшую цену! 💰',
@@ -1001,7 +1975,7 @@
                 };
                 
                 const response = responses[message.toLowerCase()] || 
-                    'Спасибо за ваше сообщение! Наш специалист свяжется с вами в ближайшее время. В среднем время ответа составляет 15 минут. 🤖';
+                    'Спасибо за ваше сообщение! Наш специалист свяжется с вами в ближайшее время. 🤖';
                 
                 addMessageToChat(response, 'support');
             }, 1000 + Math.random() * 2000);
@@ -1019,116 +1993,24 @@
             
             if (sender === 'user') {
                 messageDiv.innerHTML = `
-                    <div class="flex items-center justify-end mb-2">
-                        <strong>Вы</strong>
-                        <span class="icon-3d ml-2">👤</span>
+                    <div class="flex items-center justify-end mb-1">
+                        <strong class="text-sm">Вы</strong>
+                        <span class="icon-3d ml-1 text-sm">👤</span>
                     </div>
-                    ${message}
+                    <div class="text-sm">${message}</div>
                 `;
             } else {
                 messageDiv.innerHTML = `
-                    <div class="flex items-center mb-2">
-                        <span class="icon-3d mr-2">🤖</span>
-                        <strong>Поддержка AquaPure</strong>
+                    <div class="flex items-center mb-1">
+                        <span class="icon-3d mr-1 text-sm">🤖</span>
+                        <strong class="text-sm">Поддержка AquaPure</strong>
                     </div>
-                    ${message}
+                    <div class="text-sm">${message}</div>
                 `;
             }
             
             chatArea.appendChild(messageDiv);
             chatArea.scrollTop = chatArea.scrollHeight;
-
-            // Add water effect to new messages
-            setTimeout(() => {
-                for (let i = 0; i < 3; i++) {
-                    const splash = document.createElement('div');
-                    splash.innerHTML = '💧';
-                    splash.style.position = 'absolute';
-                    splash.style.left = Math.random() * 100 + '%';
-                    splash.style.top = '0px';
-                    splash.style.animation = 'waterSplash 0.8s ease-out forwards';
-                    splash.style.animationDelay = (i * 0.2) + 's';
-                    messageDiv.style.position = 'relative';
-                    messageDiv.appendChild(splash);
-                    setTimeout(() => splash.remove(), 1000);
-                }
-            }, 100);
-        }
-
-        // Player Progress System
-        let playerProgress = {
-            bestScore: 0,
-            totalGames: 0,
-            totalScore: 0,
-            achievements: [],
-            level: 1,
-            experience: 0
-        };
-
-        // Load progress (simulated - in real app would use backend)
-        function loadProgress() {
-            try {
-                // Try to use cookies as fallback storage
-                const saved = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith('aquapure_progress='));
-                if (saved) {
-                    playerProgress = JSON.parse(decodeURIComponent(saved.split('=')[1]));
-                }
-            } catch (e) {
-                console.log('Using default progress');
-            }
-            updateProgressDisplay();
-        }
-
-        // Save progress (simulated)
-        function saveProgress() {
-            try {
-                // Save to cookies as fallback
-                const progressData = encodeURIComponent(JSON.stringify(playerProgress));
-                document.cookie = `aquapure_progress=${progressData}; max-age=31536000; path=/`;
-                console.log('Прогресс сохранен!');
-            } catch (e) {
-                console.log('Прогресс сохранен в сессии');
-            }
-        }
-
-        // Check and award achievements
-        function checkAchievements(currentScore) {
-            const newAchievements = [];
-            
-            if (currentScore >= 100 && !playerProgress.achievements.includes('first_century')) {
-                playerProgress.achievements.push('first_century');
-                newAchievements.push({ id: 'first_century', name: '💯 Первая сотня', desc: 'Набрать 100+ очков в одной игре' });
-            }
-            
-            if (currentScore >= 200 && !playerProgress.achievements.includes('water_master')) {
-                playerProgress.achievements.push('water_master');
-                newAchievements.push({ id: 'water_master', name: '🏆 Мастер воды', desc: 'Набрать 200+ очков в одной игре' });
-            }
-            
-            if (playerProgress.totalGames >= 10 && !playerProgress.achievements.includes('veteran')) {
-                playerProgress.achievements.push('veteran');
-                newAchievements.push({ id: 'veteran', name: '🎮 Ветеран', desc: 'Сыграть 10 игр' });
-            }
-            
-            if (playerProgress.totalScore >= 1000 && !playerProgress.achievements.includes('collector')) {
-                playerProgress.achievements.push('collector');
-                newAchievements.push({ id: 'collector', name: '💎 Коллекционер', desc: 'Набрать 1000+ общих очков' });
-            }
-
-            return newAchievements;
-        }
-
-        // Calculate level and experience
-        function updateLevel() {
-            const newLevel = Math.floor(playerProgress.totalScore / 500) + 1;
-            if (newLevel > playerProgress.level) {
-                playerProgress.level = newLevel;
-                return true; // Level up!
-            }
-            playerProgress.experience = playerProgress.totalScore % 500;
-            return false;
         }
 
         // Game logic
@@ -1151,20 +2033,31 @@
             keys[e.key] = false;
         });
 
-        // Touch controls for mobile
+        // Touch controls
         let touchStartX = 0;
+        let isDragging = false;
+
         gameArea.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             touchStartX = e.touches[0].clientX;
-        });
+            isDragging = true;
+        }, { passive: false });
 
         gameArea.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            if (!isDragging) return;
+            
             const touchX = e.touches[0].clientX;
             const gameRect = gameArea.getBoundingClientRect();
             const newPosition = ((touchX - gameRect.left) / gameRect.width) * 100;
             playerPosition = Math.max(0, Math.min(100, newPosition));
             player.style.left = playerPosition + '%';
-        });
+        }, { passive: false });
+
+        gameArea.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            isDragging = false;
+        }, { passive: false });
 
         function updatePlayer() {
             if (keys['ArrowLeft'] || keys['a']) {
@@ -1183,29 +2076,34 @@
             item.style.left = Math.random() * 90 + '%';
             item.style.animationDuration = (Math.random() * 2 + 3) + 's';
             
-            item.addEventListener('click', () => {
+            const handleCatch = () => {
                 score += 10;
                 scoreElement.textContent = score;
                 item.remove();
                 
-                // Enhanced splash effect for caught items
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < 4; i++) {
                     const splash = document.createElement('div');
-                    splash.innerHTML = ['✨', '💫', '🌟', '💧'][Math.floor(Math.random() * 4)];
+                    splash.innerHTML = ['✨', '🌟', '💧'][Math.floor(Math.random() * 3)];
                     splash.style.position = 'absolute';
                     splash.style.left = item.style.left;
                     splash.style.top = item.offsetTop + 'px';
                     splash.style.animation = 'waterSplash 0.8s ease-out forwards';
                     splash.style.animationDelay = (i * 0.1) + 's';
-                    splash.style.fontSize = '24px';
+                    splash.style.fontSize = '16px';
                     gameArea.appendChild(splash);
                     setTimeout(() => splash.remove(), 1000);
                 }
-            });
+            };
+
+            item.addEventListener('click', handleCatch);
+            item.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleCatch();
+            }, { passive: false });
 
             gameArea.appendChild(item);
 
-            // Remove item after animation
             setTimeout(() => {
                 if (item.parentNode) {
                     item.remove();
@@ -1226,7 +2124,6 @@
             gameInterval = setInterval(updatePlayer, 16);
             itemInterval = setInterval(createFallingItem, 1000);
 
-            // End game after 30 seconds
             setTimeout(() => {
                 endGame();
             }, 30000);
@@ -1237,52 +2134,94 @@
             clearInterval(gameInterval);
             clearInterval(itemInterval);
             
-            // Clear falling items
             document.querySelectorAll('.falling-item').forEach(item => item.remove());
             
-            // Update progress
             playerProgress.totalGames++;
             playerProgress.totalScore += score;
             
-            // Check for new best score
+            const dropEarned = Math.floor(score / 10);
+            addDrops(dropEarned);
+            
             let isNewRecord = false;
             if (score > playerProgress.bestScore) {
                 playerProgress.bestScore = score;
                 isNewRecord = true;
+                addDrops(50);
             }
             
-            // Check for level up
             const leveledUp = updateLevel();
-            
-            // Check achievements
             const newAchievements = checkAchievements(score);
             
-            // Save progress
             saveProgress();
             updateProgressDisplay();
             
-            // Show game over message with achievements
-            let message = `Игра окончена! Очки: ${score}`;
+            let message = `Игра окончена! Очки: ${score}<br>Заработано Drop: ${dropEarned}`;
             if (isNewRecord) {
-                message += '\n🎉 НОВЫЙ РЕКОРД!';
+                message += '<br>🎉 НОВЫЙ РЕКОРД!';
             }
             if (leveledUp) {
-                message += `\n⭐ НОВЫЙ УРОВЕНЬ: ${playerProgress.level}!`;
+                message += `<br>⭐ НОВЫЙ УРОВЕНЬ: ${playerProgress.level}!`;
             }
             if (newAchievements.length > 0) {
-                message += '\n🏆 Новые достижения:';
+                message += '<br>🏆 Новые достижения:';
                 newAchievements.forEach(achievement => {
-                    message += `\n${achievement.name}`;
+                    message += `<br>${achievement.name}`;
                 });
             }
             
             document.getElementById('gameInstructions').style.display = 'flex';
-            document.getElementById('gameInstructions').innerHTML = message.replace(/\n/g, '<br>');
+            document.getElementById('gameInstructions').innerHTML = message;
             document.getElementById('startGameBtn').textContent = 'Начать игру';
             document.getElementById('startGameBtn').disabled = false;
             
-            // Show achievement notifications
             showAchievementNotifications(newAchievements, isNewRecord, leveledUp);
+        }
+
+        function checkAchievements(currentScore) {
+            const newAchievements = [];
+            
+            if (currentScore >= 100 && !playerProgress.achievements.includes('first_century')) {
+                playerProgress.achievements.push('first_century');
+                newAchievements.push({ id: 'first_century', name: '💯 Первая сотня', desc: 'Набрать 100+ очков в одной игре' });
+                addDrops(50);
+            }
+            
+            if (currentScore >= 200 && !playerProgress.achievements.includes('water_master')) {
+                playerProgress.achievements.push('water_master');
+                newAchievements.push({ id: 'water_master', name: '🏆 Мастер воды', desc: 'Набрать 200+ очков в одной игре' });
+                addDrops(100);
+            }
+            
+            if (playerProgress.totalGames >= 10 && !playerProgress.achievements.includes('veteran')) {
+                playerProgress.achievements.push('veteran');
+                newAchievements.push({ id: 'veteran', name: '🎮 Ветеран', desc: 'Сыграть 10 игр' });
+                addDrops(75);
+            }
+            
+            if (playerProgress.totalScore >= 1000 && !playerProgress.achievements.includes('collector')) {
+                playerProgress.achievements.push('collector');
+                newAchievements.push({ id: 'collector', name: '💎 Коллекционер', desc: 'Набрать 1000+ общих очков' });
+                addDrops(200);
+            }
+
+            if (playerProgress.dropCount >= 1000 && !playerProgress.achievements.includes('drop_master')) {
+                playerProgress.achievements.push('drop_master');
+                newAchievements.push({ id: 'drop_master', name: '💧 Мастер Drop', desc: 'Собрать 1000+ Drop очков' });
+                addDrops(500);
+            }
+
+            return newAchievements;
+        }
+
+        function updateLevel() {
+            const newLevel = Math.floor(playerProgress.totalScore / 500) + 1;
+            if (newLevel > playerProgress.level) {
+                playerProgress.level = newLevel;
+                addDrops(newLevel * 50);
+                return true;
+            }
+            playerProgress.experience = playerProgress.totalScore % 500;
+            return false;
         }
 
         function showAchievementNotifications(achievements, newRecord, levelUp) {
@@ -1305,7 +2244,7 @@
 
         function showNotification(text, type) {
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg font-bold text-white transform transition-all duration-500`;
+            notification.className = `fixed top-4 left-4 z-50 px-3 py-2 rounded-lg font-bold text-white transform transition-all duration-500 text-sm`;
             
             switch(type) {
                 case 'record':
@@ -1317,10 +2256,23 @@
                 case 'achievement':
                     notification.classList.add('bg-gradient-to-r', 'from-green-500', 'to-blue-500');
                     break;
+                case 'roulette':
+                    notification.classList.add('bg-gradient-to-r', 'from-orange-500', 'to-red-500');
+                    break;
+                case 'star':
+                    notification.classList.add('bg-gradient-to-r', 'from-yellow-300', 'to-yellow-500');
+                    notification.style.color = '#333';
+                    break;
+                case 'success':
+                    notification.classList.add('bg-gradient-to-r', 'from-green-500', 'to-green-700');
+                    break;
+                case 'error':
+                    notification.classList.add('bg-gradient-to-r', 'from-red-500', 'to-red-700');
+                    break;
             }
             
             notification.textContent = text;
-            notification.style.transform = 'translateX(100%)';
+            notification.style.transform = 'translateX(-100%)';
             
             document.body.appendChild(notification);
             
@@ -1329,7 +2281,7 @@
             }, 100);
             
             setTimeout(() => {
-                notification.style.transform = 'translateX(100%)';
+                notification.style.transform = 'translateX(-100%)';
                 setTimeout(() => notification.remove(), 500);
             }, 3000);
         }
@@ -1338,9 +2290,8 @@
             document.getElementById('bestScore').textContent = playerProgress.bestScore;
             document.getElementById('totalGames').textContent = playerProgress.totalGames;
             document.getElementById('playerLevel').textContent = playerProgress.level;
-            document.getElementById('totalScore').textContent = playerProgress.totalScore;
+            document.getElementById('totalDrop').textContent = playerProgress.dropCount;
             
-            // Update experience bar
             const expNeeded = 500;
             const currentExp = playerProgress.totalScore % expNeeded;
             const expPercent = (currentExp / expNeeded) * 100;
@@ -1348,7 +2299,6 @@
             document.getElementById('expText').textContent = `${currentExp}/${expNeeded}`;
             document.getElementById('expBar').style.width = expPercent + '%';
             
-            // Update achievements display
             updateAchievementsDisplay();
         }
 
@@ -1359,7 +2309,8 @@
                 { id: 'first_century', name: '💯 Первая сотня', desc: 'Набрать 100+ очков в одной игре' },
                 { id: 'water_master', name: '🏆 Мастер воды', desc: 'Набрать 200+ очков в одной игре' },
                 { id: 'veteran', name: '🎮 Ветеран', desc: 'Сыграть 10 игр' },
-                { id: 'collector', name: '💎 Коллекционер', desc: 'Набрать 1000+ общих очков' }
+                { id: 'collector', name: '💎 Коллекционер', desc: 'Набрать 1000+ общих очков' },
+                { id: 'drop_master', name: '💧 Мастер Drop', desc: 'Собрать 1000+ Drop очков' }
             ];
             
             achievementsList.innerHTML = '';
@@ -1367,17 +2318,17 @@
             allAchievements.forEach(achievement => {
                 const unlocked = playerProgress.achievements.includes(achievement.id);
                 const achievementDiv = document.createElement('div');
-                achievementDiv.className = `achievement-card p-6 ${unlocked ? 'unlocked' : ''}`;
+                achievementDiv.className = `achievement-card p-3 ${unlocked ? 'unlocked' : ''}`;
                 
                 achievementDiv.innerHTML = `
-                    <div class="flex items-center space-x-4">
-                        <div class="text-3xl icon-3d">${unlocked ? achievement.name.split(' ')[0] : '🔒'}</div>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-lg icon-3d">${unlocked ? achievement.name.split(' ')[0] : '🔒'}</div>
                         <div class="flex-1">
-                            <div class="font-bold text-lg ${unlocked ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}">${achievement.name.substring(2)}</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">${achievement.desc}</div>
-                            ${unlocked ? '<div class="text-xs text-green-500 mt-2 font-semibold">✓ РАЗБЛОКИРОВАНО</div>' : '<div class="text-xs text-gray-400 mt-2">🔒 Заблокировано</div>'}
+                            <div class="font-bold text-sm ${unlocked ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}">${achievement.name.substring(2)}</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">${achievement.desc}</div>
+                            ${unlocked ? '<div class="text-xs text-green-500 mt-1 font-semibold">✓ РАЗБЛОКИРОВАНО</div>' : '<div class="text-xs text-gray-400 mt-1">🔒 Заблокировано</div>'}
                         </div>
-                        ${unlocked ? '<div class="text-2xl animate-pulse">✨</div>' : ''}
+                        ${unlocked ? '<div class="text-lg animate-pulse">✨</div>' : ''}
                     </div>
                 `;
                 
@@ -1385,69 +2336,144 @@
             });
         }
 
-        // Theme toggle functionality
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.contains('dark');
-            const themeToggle = document.getElementById('themeToggle');
-            
-            if (isDark) {
-                document.documentElement.classList.remove('dark');
-                document.documentElement.setAttribute('data-theme', 'light');
-                themeToggle.classList.remove('dark');
+        // User Profile
+        function updateUserProfile() {
+            if (user) {
+                const avatar = document.getElementById('userAvatar');
+                const userName = document.getElementById('userName');
+                const userInfo = document.getElementById('userInfo');
+                
+                // Set avatar with first letter of name
+                avatar.textContent = user.first_name ? user.first_name.charAt(0).toUpperCase() : '👤';
+                
+                // Set name
+                userName.textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                
+                // Set username
+                userInfo.textContent = user.username ? '@' + user.username : 'ID: ' + user.id;
+                
+                // Save user to database
+                db.saveUser({
+                    dropCount: playerProgress.dropCount,
+                    starCount: playerProgress.starCount,
+                    level: playerProgress.level,
+                    totalScore: playerProgress.totalScore
+                });
+
+                // Show admin button for specific users (replace with your admin IDs)
+                if ([12345678, 87654321].includes(user.id)) {
+                    document.getElementById('adminBtn').classList.remove('hidden');
+                }
             } else {
-                document.documentElement.classList.add('dark');
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeToggle.classList.add('dark');
+                document.getElementById('userName').textContent = 'Гость';
+                document.getElementById('userInfo').textContent = 'Не авторизован';
             }
         }
 
-        document.getElementById('startGameBtn').addEventListener('click', startGame);
+        // Admin Panel
+        let isAdmin = false;
 
-        // Registration form
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'block';
+                loadAdminData();
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        async function loadAdminData() {
+            const users = await db.getUsers();
+            const userList = document.getElementById('userList');
             
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user-item';
+                userDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold">${user.firstName} ${user.lastName || ''}</div>
+                            <div class="text-sm text-gray-600">@${user.username || 'no_username'}</div>
+                            <div class="text-xs text-gray-500">ID: ${user.userId}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm">💧 ${user.dropCount || 0}</div>
+                            <div class="text-sm">⭐ ${user.starCount || 0}</div>
+                            <div class="text-xs">Lvl ${user.level || 1}</div>
+                        </div>
+                    </div>
+                `;
+                userList.appendChild(userDiv);
+            });
             
-            // Simple validation
-            if (username && email && password) {
-                // Create success splash effect
-                const form = this;
-                const rect = form.getBoundingClientRect();
-                
-                for (let i = 0; i < 20; i++) {
-                    const splash = document.createElement('div');
-                    splash.innerHTML = ['🎉', '✨', '💫', '🌟'][Math.floor(Math.random() * 4)];
-                    splash.style.position = 'fixed';
-                    splash.style.left = (rect.left + Math.random() * rect.width) + 'px';
-                    splash.style.top = (rect.top + Math.random() * rect.height) + 'px';
-                    splash.style.animation = 'waterSplash 1.5s ease-out forwards';
-                    splash.style.animationDelay = (i * 0.1) + 's';
-                    splash.style.zIndex = '1000';
-                    splash.style.fontSize = '28px';
-                    document.body.appendChild(splash);
-                    setTimeout(() => splash.remove(), 1800);
-                }
-                
-                setTimeout(() => {
-                    alert('Регистрация успешна! Добро пожаловать в AquaPure!');
-                    form.reset();
-                }, 500);
+            // Update statistics
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('activeUsers').textContent = users.filter(u => 
+                Date.now() - u.lastActive < 24 * 60 * 60 * 1000
+            ).length;
+            document.getElementById('totalDropsGiven').textContent = users.reduce((sum, u) => sum + (u.dropCount || 0), 0);
+            document.getElementById('totalStarsSpent').textContent = users.reduce((sum, u) => sum + (u.starsSpent || 0), 0);
+        }
+
+        // Admin functions
+        document.getElementById('giveDropBtn').addEventListener('click', async function() {
+            const userId = document.getElementById('actionUserId').value;
+            const amount = parseInt(document.getElementById('actionDropAmount').value);
+            
+            if (!userId || !amount) {
+                showNotification('❌ Заполните все поля', 'error');
+                return;
+            }
+            
+            if (await db.updateUserBalance(userId, amount, 0)) {
+                showNotification(`✅ Выдано ${amount} Drop пользователю ${userId}`, 'success');
+                loadAdminData();
+            } else {
+                showNotification('❌ Ошибка выдачи Drop', 'error');
             }
         });
 
-        // Initialize player position and load progress
-        player.style.left = playerPosition + '%';
-        loadProgress();
+        document.getElementById('removeDropBtn').addEventListener('click', async function() {
+            const userId = document.getElementById('actionUserId').value;
+            const amount = parseInt(document.getElementById('actionDropAmount').value);
+            
+            if (!userId || !amount) {
+                showNotification('❌ Заполните все поля', 'error');
+                return;
+            }
+            
+            if (await db.updateUserBalance(userId, -amount, 0)) {
+                showNotification(`✅ Списано ${amount} Drop у пользователя ${userId}`, 'success');
+                loadAdminData();
+            } else {
+                showNotification('❌ Ошибка списания Drop', 'error');
+            }
+        });
 
-        // Initialize theme toggle
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        
-        // Set initial theme toggle state
-        if (document.documentElement.classList.contains('dark')) {
-            document.getElementById('themeToggle').classList.add('dark');
+        // Event listeners
+        document.getElementById('startGameBtn').addEventListener('click', startGame);
+        document.getElementById('adminBtn').addEventListener('click', toggleAdminPanel);
+        document.getElementById('closeAdminBtn').addEventListener('click', () => {
+            document.getElementById('adminPanel').style.display = 'none';
+        });
+
+        // Initialize
+        player.style.left = playerPosition + '%';
+        loadProgress().then(() => {
+            updateUserProfile();
+            loadSectionStates();
+        });
+
+        // Auto-save
+        setInterval(saveProgress, 30000);
+        window.addEventListener('beforeunload', saveProgress);
+
+        // Telegram WebApp ready callback
+        if (tg) {
+            tg.ready();
+            tg.MainButton.hide();
         }
     </script>
 </body>
