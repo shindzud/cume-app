@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="telegram-web-app" content="true">
-    <title>Last Life - Библиотека</title>
+    <title>Killing Moon - Библиотека Ужасов</title>
     <meta name="description" content="Создавайте и читайте захватывающие истории ужасов">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -442,7 +442,7 @@
         <header class="header">
             <div class="logo">
                 <span>🌙</span>
-                <span>Last Life</span>
+                <span>Killing Moon</span>
             </div>
             
             <button class="menu-button" onclick="toggleMenu()" id="menu-btn">
@@ -506,7 +506,7 @@
                             </select>
                         </div>
                         
-                        <textarea id="story-content" placeholder="Начните свою историю..." 
+                        <textarea id="story-content" placeholder="Начните свою историю ужасов..." 
                                 class="input-field" rows="8" oninput="updateStats()"></textarea>
                     </div>
                     
@@ -601,6 +601,49 @@
                         </div>
                         
                         <div class="grid grid-cols-1 gap-4">
+                            <!-- Admin Rights Management -->
+                            <div class="border border-red-600 rounded-lg p-4">
+                                <h3 class="text-lg mb-3">👑 Управление правами</h3>
+                                
+                                <div class="mb-3">
+                                    <input type="password" id="new-admin-password" placeholder="Новая сид-фраза..." class="input-field mb-2">
+                                    <button class="btn w-full mb-2" onclick="changeAdminPassword()">
+                                        <span>🔑</span>
+                                        <span>Изменить сид-фразу</span>
+                                    </button>
+                                    
+                                    <div class="text-sm text-gray-400">
+                                        <p>Текущая сид-фраза: <span class="text-red-400" id="current-seed">shindягубери</span></p>
+                                        <p class="mt-1">Последний вход: <span id="last-login">Сейчас</span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stories Management -->
+                            <div class="border border-red-600 rounded-lg p-4">
+                                <h3 class="text-lg mb-3">📚 Управление историями</h3>
+                                
+                                <div class="mb-3">
+                                    <input type="text" id="story-search" placeholder="🔍 Поиск истории..." 
+                                           class="input-field mb-2" oninput="searchAdminStories()">
+                                    <select id="story-filter" class="input-field mb-2" onchange="filterAdminStories()">
+                                        <option value="all">Все истории</option>
+                                        <option value="horror">🩸 Классический ужас</option>
+                                        <option value="psychological">🧠 Психологический</option>
+                                        <option value="supernatural">👻 Сверхъестественное</option>
+                                        <option value="gothic">🏰 Готический</option>
+                                        <option value="cosmic">🌌 Космический</option>
+                                        <option value="slasher">🔪 Слэшер</option>
+                                        <option value="zombie">🧟 Зомби</option>
+                                        <option value="vampire">🧛 Вампирский</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="admin-stories-list" class="space-y-2 max-h-60 overflow-y-auto">
+                                    <!-- Stories list will be populated here -->
+                                </div>
+                            </div>
+                            
                             <!-- Easter Eggs Management -->
                             <div class="border border-red-600 rounded-lg p-4">
                                 <h3 class="text-lg mb-3">🥚 Управление пасхалками</h3>
@@ -731,6 +774,10 @@
         let currentTab = 'writer';
         let isAdminLoggedIn = false;
         let easterEggs = [];
+        let adminSettings = {
+            seedPhrase: 'shindягубери',
+            lastLogin: null
+        };
         
         let stories = [
             {
@@ -830,13 +877,16 @@
         function adminLogin() {
             const password = document.getElementById('admin-password').value.trim();
             
-            if (password === 'shindягубери') {
+            if (password === adminSettings.seedPhrase) {
                 isAdminLoggedIn = true;
+                adminSettings.lastLogin = new Date().toLocaleString();
                 document.getElementById('admin-login-screen').style.display = 'none';
                 document.getElementById('admin-panel').style.display = 'block';
                 document.getElementById('admin-password').value = '';
                 updateAdminStats();
                 displayEasterEggsList();
+                displayAdminStoriesList();
+                updateAdminInfo();
                 showNotification('🔑 Добро пожаловать, Администратор!');
             } else {
                 showNotification('❌ Неверная сид-фраза!');
@@ -845,6 +895,30 @@
                     document.getElementById('admin-password').classList.remove('animate-shake');
                 }, 500);
             }
+        }
+
+        function changeAdminPassword() {
+            const newPassword = document.getElementById('new-admin-password').value.trim();
+            
+            if (!newPassword) {
+                showNotification('❌ Введите новую сид-фразу!');
+                return;
+            }
+            
+            if (newPassword.length < 5) {
+                showNotification('❌ Сид-фраза должна быть не менее 5 символов!');
+                return;
+            }
+            
+            adminSettings.seedPhrase = newPassword;
+            document.getElementById('new-admin-password').value = '';
+            updateAdminInfo();
+            showNotification('🔑 Сид-фраза изменена!');
+        }
+
+        function updateAdminInfo() {
+            document.getElementById('current-seed').textContent = adminSettings.seedPhrase;
+            document.getElementById('last-login').textContent = adminSettings.lastLogin || 'Никогда';
         }
 
         function adminLogout() {
@@ -1012,10 +1086,106 @@
             showNotification('🎲 Случайная пасхалка появилась!');
         }
 
+        // Stories Management Functions
+        function displayAdminStoriesList() {
+            const container = document.getElementById('admin-stories-list');
+            
+            if (stories.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-sm">Истории не найдены</p>';
+                return;
+            }
+            
+            let filteredStories = [...stories];
+            
+            // Apply search filter
+            const searchTerm = document.getElementById('story-search')?.value.toLowerCase();
+            if (searchTerm) {
+                filteredStories = filteredStories.filter(story => 
+                    story.title.toLowerCase().includes(searchTerm) || 
+                    story.author.toLowerCase().includes(searchTerm) ||
+                    story.content.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Apply genre filter
+            const genreFilter = document.getElementById('story-filter')?.value;
+            if (genreFilter && genreFilter !== 'all') {
+                filteredStories = filteredStories.filter(story => story.genre === genreFilter);
+            }
+            
+            container.innerHTML = filteredStories.map(story => `
+                <div class="flex items-start justify-between bg-gray-800 p-3 rounded">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="genre-tag">${getGenreIcon(story.genre)}</span>
+                            <h4 class="text-sm font-semibold truncate">${story.title}</h4>
+                        </div>
+                        <div class="text-xs text-gray-400 mb-1">
+                            👤 ${story.author} • 📅 ${story.date} • 📝 ${story.wordCount} слов
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            ⭐ ${story.rating} • 👁️ ${story.views || 0} • 💀 ${story.horrorScore || 0}
+                        </div>
+                    </div>
+                    <div class="flex gap-1 ml-2">
+                        <button class="btn btn-sm text-xs" onclick="viewStoryInAdmin(${story.id})" title="Просмотр">
+                            👁️
+                        </button>
+                        <button class="btn btn-sm text-xs bg-red-600 hover:bg-red-700" onclick="deleteStory(${story.id})" title="Удалить">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            if (filteredStories.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-sm">Истории не найдены по критериям поиска</p>';
+            }
+        }
+
+        function searchAdminStories() {
+            displayAdminStoriesList();
+        }
+
+        function filterAdminStories() {
+            displayAdminStoriesList();
+        }
+
+        function viewStoryInAdmin(storyId) {
+            const story = stories.find(s => s.id === storyId);
+            if (story) {
+                openStoryModal(story);
+            }
+        }
+
+        function deleteStory(storyId) {
+            const story = stories.find(s => s.id === storyId);
+            if (!story) {
+                showNotification('❌ История не найдена!');
+                return;
+            }
+            
+            // Confirm deletion
+            if (!confirm(`Удалить историю "${story.title}" автора ${story.author}?`)) {
+                return;
+            }
+            
+            // Remove story from array
+            stories = stories.filter(s => s.id !== storyId);
+            
+            // Update displays
+            displayAdminStoriesList();
+            updateAdminStats();
+            displayLibrary(); // Update library if currently viewing
+            
+            showNotification(`🗑️ История "${story.title}" удалена!`);
+        }
+
         function exportAdminData() {
             const adminData = {
                 stories: stories,
                 easterEggs: easterEggs,
+                adminSettings: adminSettings,
                 stats: {
                     totalStories: stories.length,
                     totalWords: stories.reduce((sum, story) => sum + story.wordCount, 0),
