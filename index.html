@@ -2,116 +2,220 @@
 <html lang="ru" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Killing Moon - Библиотека Ужасов</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         'dark': {
+                            950: '#020202',
                             900: '#0a0a0a',
+                            850: '#0f0f0f',
                             800: '#1a1a1a',
+                            750: '#1f1f1f',
                             700: '#2a2a2a',
                             600: '#3a3a3a',
                         },
                         'horror': {
                             primary: '#8B0000',
-                            secondary: '#4A0E0E',
-                            accent: '#FF6B6B',
-                            dark: '#1a0a0a',
+                            secondary: '#660000',
+                            accent: '#FF4444',
+                            dark: '#1a0505',
+                            glow: '#ff0000',
                         },
                         'mystical': {
                             primary: '#4A148C',
-                            secondary: '#7B1FA2',
+                            secondary: '#6A1B9A',
                             accent: '#BA68C8',
-                            dark: '#1a0a1a',
+                            dark: '#1a051a',
+                            glow: '#9c27b0',
                         },
                         'classic': {
-                            primary: '#2E4057',
-                            secondary: '#048A81',
-                            accent: '#54C6EB',
-                            dark: '#0a0a1a',
+                            primary: '#1e3a5f',
+                            secondary: '#2c5282',
+                            accent: '#4299e1',
+                            dark: '#051a2e',
+                            glow: '#3182ce',
                         }
                     },
                     fontFamily: {
                         'horror': ['Creepster', 'cursive'],
                         'gothic': ['Cinzel', 'serif'],
-                        'elegant': ['Playfair Display', 'serif']
+                        'elegant': ['Playfair Display', 'serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
                     },
                     animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'book-flip': 'bookFlip 0.6s ease-in-out',
+                        'float': 'float 4s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'book-flip': 'bookFlip 0.8s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'stars': 'stars 20s linear infinite',
+                        'shimmer': 'shimmer 2s ease-in-out infinite',
+                        'bounce-subtle': 'bounceSubtle 2s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' },
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '25%': { transform: 'translateY(-8px) rotate(1deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(0deg)' },
+                            '75%': { transform: 'translateY(-8px) rotate(-1deg)' },
                         },
                         glow: {
-                            '0%': { boxShadow: '0 0 5px currentColor' },
-                            '100%': { boxShadow: '0 0 20px currentColor' },
+                            '0%': { 
+                                boxShadow: '0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor',
+                                filter: 'brightness(1)'
+                            },
+                            '100%': { 
+                                boxShadow: '0 0 20px currentColor, 0 0 30px currentColor, 0 0 40px currentColor',
+                                filter: 'brightness(1.2)'
+                            },
                         },
                         bookFlip: {
-                            '0%': { transform: 'rotateY(0deg)' },
-                            '50%': { transform: 'rotateY(-90deg)' },
-                            '100%': { transform: 'rotateY(0deg)' },
+                            '0%': { transform: 'rotateY(0deg) scale(1)' },
+                            '50%': { transform: 'rotateY(-90deg) scale(0.9)' },
+                            '100%': { transform: 'rotateY(0deg) scale(1)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.9)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        stars: {
+                            '0%': { transform: 'translateY(0px)' },
+                            '100%': { transform: 'translateY(-100vh)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        },
+                        bounceSubtle: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-4px)' },
                         }
+                    },
+                    backdropBlur: {
+                        xs: '2px',
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Cinzel:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Cinzel:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #8B0000;
-            --secondary: #4A0E0E;
-            --accent: #FF6B6B;
-            --bg-dark: #1a0a0a;
+            --secondary: #660000;
+            --accent: #FF4444;
+            --bg-dark: #1a0505;
             --text-light: #f8f8f8;
+            --glow: #ff0000;
+            --tg-theme-bg-color: #020202;
+            --tg-theme-text-color: #ffffff;
         }
 
         [data-theme="mystical"] {
             --primary: #4A148C;
-            --secondary: #7B1FA2;
+            --secondary: #6A1B9A;
             --accent: #BA68C8;
-            --bg-dark: #1a0a1a;
+            --bg-dark: #1a051a;
+            --glow: #9c27b0;
         }
 
         [data-theme="classic"] {
-            --primary: #2E4057;
-            --secondary: #048A81;
-            --accent: #54C6EB;
-            --bg-dark: #0a0a1a;
+            --primary: #1e3a5f;
+            --secondary: #2c5282;
+            --accent: #4299e1;
+            --bg-dark: #051a2e;
+            --glow: #3182ce;
+        }
+
+        /* Telegram Mini App styles */
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
         }
 
         body {
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #0a0a0a 50%, #000000 100%);
+            background: 
+                radial-gradient(ellipse at top, var(--bg-dark) 0%, #020202 50%, #000000 100%),
+                linear-gradient(135deg, rgba(139, 0, 0, 0.03) 0%, transparent 50%, rgba(139, 0, 0, 0.03) 100%);
             background-attachment: fixed;
             color: var(--text-light);
+            overscroll-behavior: none;
+            font-family: var(--tg-theme-font-family, 'Cinzel', serif);
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
+        /* Animated background particles */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--glow);
+            border-radius: 50%;
+            animation: stars linear infinite;
+            opacity: 0.3;
+        }
+
+        .star:nth-child(odd) {
+            background: var(--accent);
+            animation-duration: 25s;
+        }
+
+        .star:nth-child(even) {
+            background: var(--primary);
+            animation-duration: 30s;
+        }
+
+        .star:nth-child(3n) {
+            animation-duration: 35s;
+            opacity: 0.2;
+        }
+
+        /* Enhanced book styling */
         .book-container {
-            perspective: 1500px;
+            perspective: 2000px;
             transform-style: preserve-3d;
         }
 
         .book-page {
             background: 
-                linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%),
-                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(139, 0, 0, 0.1) 0%, transparent 50%);
-            border: 2px solid var(--primary);
+                linear-gradient(145deg, #1f1f1f 0%, #0f0f0f 50%, #050505 100%),
+                radial-gradient(circle at 20% 30%, rgba(139, 0, 0, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(139, 0, 0, 0.05) 0%, transparent 60%);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, var(--primary), var(--accent), var(--primary)) 1;
             box-shadow: 
-                0 0 30px rgba(139, 0, 0, 0.3),
-                inset 0 0 20px rgba(139, 0, 0, 0.1);
+                0 0 30px rgba(139, 0, 0, 0.2),
+                inset 0 0 30px rgba(139, 0, 0, 0.05),
+                0 10px 30px rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .book-page::before {
@@ -126,80 +230,189 @@
                     0deg,
                     transparent,
                     transparent 24px,
-                    rgba(139, 0, 0, 0.1) 25px
+                    rgba(139, 0, 0, 0.08) 25px,
+                    rgba(139, 0, 0, 0.08) 26px,
+                    transparent 27px
                 );
             pointer-events: none;
         }
 
-        .book-spine {
-            background: linear-gradient(90deg, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%);
-            border-left: 3px solid var(--primary);
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+        .book-page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.02) 50%,
+                transparent 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            pointer-events: none;
         }
 
-        .floating-element {
-            animation: float 3s ease-in-out infinite;
-        }
-
+        /* Enhanced glow effects */
         .glow-effect {
-            animation: glow 2s ease-in-out infinite alternate;
+            animation: glow 3s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 10px currentColor);
         }
 
-        .theme-selector {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--primary);
+        .glow-text {
+            text-shadow: 
+                0 0 10px currentColor,
+                0 0 20px currentColor,
+                0 0 30px currentColor;
         }
 
-        .donation-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        /* Enhanced buttons */
+        .horror-btn {
+            background: linear-gradient(145deg, var(--primary), var(--secondary));
             border: 2px solid var(--accent);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .donation-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.4);
+        .horror-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
-        .star-animation {
-            animation: float 2s ease-in-out infinite;
+        .horror-btn:hover::before {
+            left: 100%;
         }
 
+        .horror-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 20px rgba(139, 0, 0, 0.4),
+                0 0 30px var(--glow);
+        }
+
+        .horror-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Theme selector improvements */
+        .theme-selector {
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--primary);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.8),
+                0 0 30px rgba(139, 0, 0, 0.3);
+        }
+
+        /* Mobile navigation */
         .mobile-nav {
+            background: rgba(2, 2, 2, 0.98);
+            backdrop-filter: blur(20px);
             transform: translateX(-100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .mobile-nav.open {
             transform: translateX(0);
         }
 
+        /* Notification improvements */
         .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: var(--primary);
-            color: white;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
+            background: linear-gradient(145deg, var(--primary), var(--secondary));
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--accent);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px var(--glow);
         }
 
-        .notification.show {
-            transform: translateX(0);
+        /* Story cards enhancements */
+        .story-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
         }
 
+        .story-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.6),
+                0 0 40px rgba(139, 0, 0, 0.3);
+        }
+
+        /* Input field improvements */
+        .horror-input {
+            background: 
+                linear-gradient(145deg, #1a1a1a, #0f0f0f),
+                radial-gradient(circle at 50% 50%, rgba(139, 0, 0, 0.05), transparent);
+            border: 2px solid var(--primary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .horror-input:focus {
+            border-color: var(--accent);
+            box-shadow: 
+                0 0 20px rgba(139, 0, 0, 0.3),
+                inset 0 0 20px rgba(139, 0, 0, 0.1);
+            transform: scale(1.02);
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(139, 0, 0, 0.3);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scroll enhancements */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        /* Responsive improvements */
         @media (max-width: 768px) {
             .book-page {
-                margin: 0.5rem;
+                margin: 0.25rem;
                 padding: 1rem !important;
             }
             
             .desktop-nav {
                 display: none;
+            }
+
+            .story-card:hover {
+                transform: translateY(-4px) scale(1.01);
             }
         }
 
@@ -208,38 +421,94 @@
                 display: none;
             }
         }
+
+        /* Dark mode enhancements */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --tg-theme-bg-color: #020202;
+                --tg-theme-text-color: #ffffff;
+            }
+        }
+
+        /* Performance optimizations */
+        .gpu-accelerated {
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        /* Enhanced icons */
+        .icon-glow {
+            filter: drop-shadow(0 0 8px currentColor);
+            transition: all 0.3s ease;
+        }
+
+        .icon-glow:hover {
+            filter: drop-shadow(0 0 16px currentColor);
+            transform: scale(1.1);
+        }
     </style>
 </head>
-<body class="h-full font-gothic" data-theme="horror">
-    <!-- Notification System -->
-    <div id="notification" class="notification">
-        <div id="notification-content"></div>
+<body class="h-full font-gothic gpu-accelerated" data-theme="horror">
+    <!-- Animated stars background -->
+    <div class="stars-container" id="stars-container"></div>
+
+    <!-- Telegram Web App Loading -->
+    <div id="tg-loading" class="fixed inset-0 bg-dark-950 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-lg glow-text" style="color: var(--primary)">Загрузка Killing Moon...</p>
+        </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="bg-black bg-opacity-80 backdrop-blur-sm border-b border-primary p-4 sticky top-0 z-50">
+    <!-- Enhanced Notification System -->
+    <div id="notification" class="notification fixed top-4 right-4 z-50 transform translate-x-full transition-transform duration-300 rounded-lg">
+        <div class="flex items-center space-x-3 p-4">
+            <div id="notification-icon" class="text-2xl"></div>
+            <div id="notification-content" class="font-medium"></div>
+        </div>
+    </div>
+
+    <!-- Enhanced Navigation -->
+    <nav class="bg-dark-950 bg-opacity-95 backdrop-blur-lg border-b-2 border-primary p-4 sticky top-0 z-40 shadow-2xl">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 floating-element">
-                    <svg viewBox="0 0 100 100" fill="currentColor" class="text-primary glow-effect">
-                        <circle cx="30" cy="35" r="8"/>
-                        <circle cx="70" cy="35" r="8"/>
-                        <path d="M50 10 C30 10, 15 25, 15 45 C15 55, 20 65, 30 70 L70 70 C80 65, 85 55, 85 45 C85 25, 70 10, 50 10"/>
-                        <rect x="45" y="45" width="4" height="15"/>
-                        <rect x="53" y="45" width="4" height="15"/>
-                        <path d="M35 75 Q50 85, 65 75" stroke="currentColor" stroke-width="2" fill="none"/>
+                <div class="w-12 h-12 floating-element">
+                    <svg viewBox="0 0 100 100" fill="currentColor" class="text-primary glow-effect icon-glow">
+                        <defs>
+                            <linearGradient id="skullGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:var(--accent);stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="30" cy="35" r="8" fill="url(#skullGradient)"/>
+                        <circle cx="70" cy="35" r="8" fill="url(#skullGradient)"/>
+                        <path d="M50 10 C30 10, 15 25, 15 45 C15 55, 20 65, 30 70 L70 70 C80 65, 85 55, 85 45 C85 25, 70 10, 50 10" fill="url(#skullGradient)"/>
+                        <rect x="45" y="45" width="4" height="15" fill="var(--bg-dark)"/>
+                        <rect x="53" y="45" width="4" height="15" fill="var(--bg-dark)"/>
+                        <path d="M35 75 Q50 85, 65 75" stroke="var(--bg-dark)" stroke-width="3" fill="none"/>
                     </svg>
                 </div>
-                <h1 class="text-2xl font-horror glow-effect" style="color: var(--primary)">Killing Moon</h1>
+                <div>
+                    <h1 class="text-2xl font-horror glow-text animate-pulse-slow" style="color: var(--primary)">Killing Moon</h1>
+                    <p class="text-xs opacity-60">Библиотека Ужасов</p>
+                </div>
             </div>
             
             <!-- Desktop Navigation -->
-            <div class="desktop-nav flex items-center space-x-4">
-                <button onclick="showTab('writer')" class="nav-btn px-4 py-2 rounded font-semibold transition-all hover:bg-primary">Писать</button>
-                <button onclick="showTab('library')" class="nav-btn px-4 py-2 rounded font-semibold transition-all hover:bg-primary">Библиотека</button>
-                <button onclick="showTab('donate')" class="nav-btn px-4 py-2 rounded font-semibold transition-all hover:bg-primary">Поддержать</button>
-                <button onclick="showTab('profile')" class="nav-btn px-4 py-2 rounded font-semibold transition-all hover:bg-primary">Профиль</button>
-                <button onclick="toggleThemeSelector()" class="p-2 rounded hover:bg-primary transition-all">
+            <div class="desktop-nav flex items-center space-x-2">
+                <button onclick="showTab('writer')" class="nav-btn horror-btn px-4 py-2 rounded-lg font-semibold text-white text-sm">
+                    ✍️ Писать
+                </button>
+                <button onclick="showTab('library')" class="nav-btn horror-btn px-4 py-2 rounded-lg font-semibold text-white text-sm">
+                    📚 Библиотека
+                </button>
+                <button onclick="showTab('donate')" class="nav-btn horror-btn px-4 py-2 rounded-lg font-semibold text-white text-sm">
+                    ⭐ Поддержать
+                </button>
+                <button onclick="showTab('profile')" class="nav-btn horror-btn px-4 py-2 rounded-lg font-semibold text-white text-sm">
+                    👤 Профиль
+                </button>
+                <button onclick="toggleThemeSelector()" class="horror-btn p-3 rounded-lg transition-all icon-glow">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                     </svg>
@@ -247,323 +516,534 @@
             </div>
 
             <!-- Mobile Navigation Toggle -->
-            <button class="mobile-nav-toggle p-2 rounded hover:bg-primary" onclick="toggleMobileNav()">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <button class="mobile-nav-toggle horror-btn p-3 rounded-lg" onclick="toggleMobileNav()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
         </div>
 
-        <!-- Theme Selector -->
-        <div id="theme-selector" class="hidden absolute top-full right-4 mt-2 theme-selector rounded-lg p-4 z-50">
-            <h3 class="text-sm font-semibold mb-3">Выберите тему:</h3>
-            <div class="space-y-2">
-                <button onclick="setTheme('horror')" class="theme-option w-full text-left p-2 rounded hover:bg-gray-700 transition-all">
-                    🩸 Кровавый ужас
+        <!-- Enhanced Theme Selector -->
+        <div id="theme-selector" class="hidden absolute top-full right-4 mt-2 theme-selector rounded-xl p-6 z-50 animate-fade-in">
+            <h3 class="text-lg font-semibold mb-4 glow-text" style="color: var(--primary)">🎨 Выберите тему:</h3>
+            <div class="space-y-3">
+                <button onclick="setTheme('horror')" class="theme-option w-full text-left p-3 rounded-lg hover:bg-dark-700 transition-all border border-transparent hover:border-primary">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">🩸</span>
+                        <div>
+                            <div class="font-semibold">Кровавый ужас</div>
+                            <div class="text-xs opacity-70">Классическая темная тема</div>
+                        </div>
+                    </div>
                 </button>
-                <button onclick="setTheme('mystical')" class="theme-option w-full text-left p-2 rounded hover:bg-gray-700 transition-all">
-                    🔮 Мистический
+                <button onclick="setTheme('mystical')" class="theme-option w-full text-left p-3 rounded-lg hover:bg-dark-700 transition-all border border-transparent hover:border-primary">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">🔮</span>
+                        <div>
+                            <div class="font-semibold">Мистический</div>
+                            <div class="text-xs opacity-70">Фиолетовые оттенки</div>
+                        </div>
+                    </div>
                 </button>
-                <button onclick="setTheme('classic')" class="theme-option w-full text-left p-2 rounded hover:bg-gray-700 transition-all">
-                    🌊 Классический
+                <button onclick="setTheme('classic')" class="theme-option w-full text-left p-3 rounded-lg hover:bg-dark-700 transition-all border border-transparent hover:border-primary">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">🌊</span>
+                        <div>
+                            <div class="font-semibold">Классический</div>
+                            <div class="text-xs opacity-70">Синие оттенки</div>
+                        </div>
+                    </div>
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Mobile Navigation -->
-    <div id="mobile-nav" class="mobile-nav fixed inset-y-0 left-0 w-64 bg-black bg-opacity-95 backdrop-blur-sm z-40 p-4">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-horror" style="color: var(--primary)">Меню</h2>
-            <button onclick="toggleMobileNav()" class="text-2xl">&times;</button>
+    <!-- Enhanced Mobile Navigation -->
+    <div id="mobile-nav" class="mobile-nav fixed inset-y-0 left-0 w-80 z-30 p-6">
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8">
+                    <svg viewBox="0 0 100 100" fill="currentColor" class="text-primary">
+                        <circle cx="30" cy="35" r="6"/>
+                        <circle cx="70" cy="35" r="6"/>
+                        <path d="M50 15 C35 15, 20 25, 20 40 C20 50, 25 58, 32 62 L68 62 C75 58, 80 50, 80 40 C80 25, 65 15, 50 15"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-horror glow-text" style="color: var(--primary)">Меню</h2>
+            </div>
+            <button onclick="toggleMobileNav()" class="text-3xl hover:text-primary transition-all">&times;</button>
         </div>
         <div class="space-y-4">
-            <button onclick="showTab('writer'); toggleMobileNav()" class="block w-full text-left p-3 rounded hover:bg-primary transition-all">✍️ Писать</button>
-            <button onclick="showTab('library'); toggleMobileNav()" class="block w-full text-left p-3 rounded hover:bg-primary transition-all">📚 Библиотека</button>
-            <button onclick="showTab('donate'); toggleMobileNav()" class="block w-full text-left p-3 rounded hover:bg-primary transition-all">⭐ Поддержать</button>
-            <button onclick="showTab('profile'); toggleMobileNav()" class="block w-full text-left p-3 rounded hover:bg-primary transition-all">👤 Профиль</button>
+            <button onclick="showTab('writer'); toggleMobileNav()" class="block w-full text-left p-4 rounded-lg hover:bg-dark-800 transition-all border border-transparent hover:border-primary">
+                <div class="flex items-center space-x-3">
+                    <span class="text-xl">✍️</span>
+                    <span class="font-semibold">Писать истории</span>
+                </div>
+            </button>
+            <button onclick="showTab('library'); toggleMobileNav()" class="block w-full text-left p-4 rounded-lg hover:bg-dark-800 transition-all border border-transparent hover:border-primary">
+                <div class="flex items-center space-x-3">
+                    <span class="text-xl">📚</span>
+                    <span class="font-semibold">Библиотека</span>
+                </div>
+            </button>
+            <button onclick="showTab('donate'); toggleMobileNav()" class="block w-full text-left p-4 rounded-lg hover:bg-dark-800 transition-all border border-transparent hover:border-primary">
+                <div class="flex items-center space-x-3">
+                    <span class="text-xl">⭐</span>
+                    <span class="font-semibold">Поддержать авторов</span>
+                </div>
+            </button>
+            <button onclick="showTab('profile'); toggleMobileNav()" class="block w-full text-left p-4 rounded-lg hover:bg-dark-800 transition-all border border-transparent hover:border-primary">
+                <div class="flex items-center space-x-3">
+                    <span class="text-xl">👤</span>
+                    <span class="font-semibold">Мой профиль</span>
+                </div>
+            </button>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto p-2 md:p-4">
-        <!-- Writer Tab -->
-        <div id="writer-tab" class="tab-content">
-            <div class="book-container mb-6">
-                <div class="book-page rounded-lg p-4 md:p-8 book-spine">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
-                        <h2 class="text-2xl md:text-3xl font-horror" style="color: var(--primary)">Новая История</h2>
+    <main class="max-w-6xl mx-auto p-3 md:p-6 relative z-10">
+        <!-- Enhanced Writer Tab -->
+        <div id="writer-tab" class="tab-content animate-slide-up">
+            <div class="book-container mb-8">
+                <div class="book-page rounded-xl p-6 md:p-10">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
+                        <div>
+                            <h2 class="text-3xl md:text-4xl font-horror glow-text mb-2" style="color: var(--primary)">✍️ Новая История</h2>
+                            <p class="text-sm opacity-70">Создайте свой шедевр ужаса</p>
+                        </div>
                         <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-                            <button onclick="saveStory()" class="bg-primary px-4 md:px-6 py-2 rounded font-semibold text-white hover:bg-secondary transition-all">
-                                💾 Сохранить
+                            <button onclick="saveStory()" class="horror-btn px-6 py-3 rounded-lg font-semibold text-white flex items-center space-x-2">
+                                <span>💾</span>
+                                <span>Сохранить</span>
                             </button>
-                            <button onclick="previewStory()" class="bg-secondary px-4 md:px-6 py-2 rounded font-semibold text-white hover:bg-primary transition-all">
-                                👁️ Предпросмотр
+                            <button onclick="previewStory()" class="horror-btn px-6 py-3 rounded-lg font-semibold text-white flex items-center space-x-2">
+                                <span>👁️</span>
+                                <span>Предпросмотр</span>
                             </button>
                         </div>
                     </div>
                     
-                    <div class="mb-4">
+                    <div class="mb-6">
                         <input 
                             type="text" 
                             id="story-title" 
-                            placeholder="Название вашей истории..." 
-                            class="w-full p-3 text-base md:text-lg bg-dark-700 text-white rounded border-2 border-primary focus:outline-none focus:border-accent transition-all"
+                            placeholder="Придумайте захватывающее название..." 
+                            class="horror-input w-full p-4 text-lg text-white rounded-xl focus:outline-none"
                         >
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <select id="story-genre" class="w-full p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <select id="story-genre" class="horror-input w-full p-4 text-base text-white rounded-xl focus:outline-none">
                             <option value="horror">🩸 Ужасы</option>
                             <option value="mystery">🔍 Мистика</option>
                             <option value="thriller">⚡ Триллер</option>
                             <option value="gothic">🏰 Готика</option>
                             <option value="supernatural">👻 Сверхъестественное</option>
+                            <option value="psychological">🧠 Психологический ужас</option>
                         </select>
                         
-                        <select id="story-length" class="w-full p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none">
-                            <option value="short">📄 Короткий рассказ</option>
-                            <option value="medium">📖 Средняя повесть</option>
-                            <option value="long">📚 Длинная история</option>
+                        <select id="story-length" class="horror-input w-full p-4 text-base text-white rounded-xl focus:outline-none">
+                            <option value="short">📄 Короткий рассказ (до 1000 слов)</option>
+                            <option value="medium">📖 Средняя повесть (1000-5000 слов)</option>
+                            <option value="long">📚 Длинная история (5000+ слов)</option>
+                        </select>
+
+                        <select id="story-mood" class="horror-input w-full p-4 text-base text-white rounded-xl focus:outline-none">
+                            <option value="dark">🌑 Мрачное</option>
+                            <option value="suspenseful">😰 Напряженное</option>
+                            <option value="mysterious">🕯️ Таинственное</option>
+                            <option value="violent">💀 Жестокое</option>
                         </select>
                     </div>
                     
-                    <div class="relative">
+                    <div class="relative mb-6">
                         <textarea 
                             id="story-content" 
-                            placeholder="Начните писать свою историю... В темноте старого особняка..."
-                            class="w-full h-64 md:h-96 p-4 text-base md:text-lg bg-dark-700 text-white rounded border-2 border-primary focus:outline-none focus:border-accent resize-none transition-all"
+                            placeholder="В глубине забытого времени, когда луна окрашивалась в кровавый цвет..."
+                            class="horror-input w-full h-80 md:h-96 p-6 text-lg text-white rounded-xl focus:outline-none resize-none custom-scrollbar"
                             style="font-family: 'Playfair Display', serif; line-height: 1.8;"
                         ></textarea>
                         
-                        <!-- Writing Tools -->
-                        <div class="absolute top-2 right-2 flex space-x-2">
-                            <button onclick="insertTemplate()" class="p-2 bg-primary rounded text-white text-sm hover:bg-secondary transition-all" title="Шаблоны">
+                        <!-- Enhanced Writing Tools -->
+                        <div class="absolute top-3 right-3 flex space-x-2">
+                            <button onclick="insertTemplate()" class="horror-btn p-3 rounded-lg text-white text-sm icon-glow" title="Шаблоны начала">
                                 📝
                             </button>
-                            <button onclick="toggleFullscreen()" class="p-2 bg-primary rounded text-white text-sm hover:bg-secondary transition-all" title="Полный экран">
+                            <button onclick="generateIdea()" class="horror-btn p-3 rounded-lg text-white text-sm icon-glow" title="Генератор идей">
+                                💡
+                            </button>
+                            <button onclick="toggleFullscreen()" class="horror-btn p-3 rounded-lg text-white text-sm icon-glow" title="Полный экран">
                                 ⛶
                             </button>
                         </div>
                     </div>
                     
-                    <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center space-y-2 md:space-y-0">
-                        <div class="text-sm opacity-70">
-                            Слов: <span id="word-count" class="font-semibold">0</span> | 
-                            Символов: <span id="char-count" class="font-semibold">0</span> |
-                            Время чтения: <span id="read-time" class="font-semibold">0 мин</span>
+                    <div class="bg-dark-800 rounded-xl p-4 mb-6 border border-primary">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div>
+                                <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="word-count">0</div>
+                                <div class="text-xs opacity-70">Слов</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="char-count">0</div>
+                                <div class="text-xs opacity-70">Символов</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="read-time">0</div>
+                                <div class="text-xs opacity-70">Мин. чтения</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="horror-score">0</div>
+                                <div class="text-xs opacity-70">Уровень ужаса</div>
+                            </div>
                         </div>
-                        <div class="flex space-x-2">
-                            <button onclick="autoSave()" class="text-sm px-3 py-1 bg-dark-600 rounded hover:bg-primary transition-all">
-                                💾 Автосохранение
-                            </button>
-                            <button onclick="generateIdea()" class="text-sm px-3 py-1 bg-dark-600 rounded hover:bg-primary transition-all">
-                                💡 Идея
-                            </button>
-                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="autoSave()" class="horror-btn px-4 py-2 rounded-lg text-sm text-white flex items-center space-x-2">
+                            <span>💾</span>
+                            <span>Автосохранение</span>
+                        </button>
+                        <button onclick="spellCheck()" class="horror-btn px-4 py-2 rounded-lg text-sm text-white flex items-center space-x-2">
+                            <span>✓</span>
+                            <span>Проверка</span>
+                        </button>
+                        <button onclick="wordSuggestions()" class="horror-btn px-4 py-2 rounded-lg text-sm text-white flex items-center space-x-2">
+                            <span>📖</span>
+                            <span>Синонимы</span>
+                        </button>
+                        <button onclick="shareStory()" class="horror-btn px-4 py-2 rounded-lg text-sm text-white flex items-center space-x-2">
+                            <span>📤</span>
+                            <span>Поделиться</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Library Tab -->
+        <!-- Enhanced Library Tab -->
         <div id="library-tab" class="tab-content hidden">
-            <div class="mb-6">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
-                    <h2 class="text-2xl md:text-3xl font-horror glow-effect" style="color: var(--primary)">Библиотека Ужасов</h2>
-                    <div class="flex space-x-2">
-                        <button onclick="toggleView('grid')" class="p-2 bg-primary rounded text-white hover:bg-secondary transition-all" title="Сетка">
-                            ⊞
+            <div class="mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-horror glow-text mb-2" style="color: var(--primary)">📚 Библиотека Ужасов</h2>
+                        <p class="text-sm opacity-70">Коллекция самых страшных историй</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button onclick="toggleView('grid')" class="horror-btn p-3 rounded-lg text-white" title="Сетка">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                            </svg>
                         </button>
-                        <button onclick="toggleView('list')" class="p-2 bg-dark-600 rounded text-white hover:bg-primary transition-all" title="Список">
-                            ☰
+                        <button onclick="toggleView('list')" class="horror-btn p-3 rounded-lg text-white" title="Список">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
+                            </svg>
+                        </button>
+                        <button onclick="randomStory()" class="horror-btn p-3 rounded-lg text-white" title="Случайная история">
+                            🎲
                         </button>
                     </div>
                 </div>
                 
-                <div class="flex flex-wrap gap-2 mb-4">
-                    <button onclick="filterLibrary('all')" class="filter-btn active bg-primary px-3 py-2 rounded text-sm">Все</button>
-                    <button onclick="filterLibrary('horror')" class="filter-btn bg-dark-600 px-3 py-2 rounded text-sm hover:bg-primary transition-all">🩸 Ужасы</button>
-                    <button onclick="filterLibrary('mystery')" class="filter-btn bg-dark-600 px-3 py-2 rounded text-sm hover:bg-primary transition-all">🔍 Мистика</button>
-                    <button onclick="filterLibrary('thriller')" class="filter-btn bg-dark-600 px-3 py-2 rounded text-sm hover:bg-primary transition-all">⚡ Триллер</button>
-                    <button onclick="filterLibrary('gothic')" class="filter-btn bg-dark-600 px-3 py-2 rounded text-sm hover:bg-primary transition-all">🏰 Готика</button>
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-2 mb-6">
+                    <button onclick="filterLibrary('all')" class="filter-btn active horror-btn px-4 py-3 rounded-lg text-sm font-medium">Все</button>
+                    <button onclick="filterLibrary('horror')" class="filter-btn horror-btn px-4 py-3 rounded-lg text-sm font-medium">🩸 Ужасы</button>
+                    <button onclick="filterLibrary('mystery')" class="filter-btn horror-btn px-4 py-3 rounded-lg text-sm font-medium">🔍 Мистика</button>
+                    <button onclick="filterLibrary('thriller')" class="filter-btn horror-btn px-4 py-3 rounded-lg text-sm font-medium">⚡ Триллер</button>
+                    <button onclick="filterLibrary('gothic')" class="filter-btn horror-btn px-4 py-3 rounded-lg text-sm font-medium">🏰 Готика</button>
+                    <button onclick="filterLibrary('supernatural')" class="filter-btn horror-btn px-4 py-3 rounded-lg text-sm font-medium">👻 Сверх.</button>
                 </div>
                 
-                <div class="mb-4">
-                    <input 
-                        type="text" 
-                        id="search-input" 
-                        placeholder="🔍 Поиск по названию или автору..." 
-                        class="w-full p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none focus:border-accent"
-                        oninput="searchStories()"
-                    >
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="flex-1">
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            placeholder="🔍 Поиск по названию, автору или содержанию..." 
+                            class="horror-input w-full p-4 text-base text-white rounded-xl focus:outline-none"
+                            oninput="searchStories()"
+                        >
+                    </div>
+                    <select id="sort-select" class="horror-input p-4 text-base text-white rounded-xl focus:outline-none" onchange="sortStories()">
+                        <option value="newest">🕐 Новые</option>
+                        <option value="oldest">📅 Старые</option>
+                        <option value="rating">⭐ Рейтинг</option>
+                        <option value="words">📝 По словам</option>
+                        <option value="donations">💰 По донатам</option>
+                    </select>
                 </div>
             </div>
             
-            <div id="library-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div id="library-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Stories will be populated here -->
+            </div>
+
+            <!-- Library stats -->
+            <div class="mt-8 bg-dark-800 rounded-xl p-6 border border-primary">
+                <h3 class="text-xl font-semibold mb-4 glow-text" style="color: var(--primary)">📊 Статистика библиотеки</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                        <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="total-stories">0</div>
+                        <div class="text-sm opacity-70">Историй</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="total-authors">0</div>
+                        <div class="text-sm opacity-70">Авторов</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="total-words">0</div>
+                        <div class="text-sm opacity-70">Слов</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold glow-text" style="color: var(--primary)" id="avg-rating">0</div>
+                        <div class="text-sm opacity-70">Средний рейтинг</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Donation Tab -->
+        <!-- Enhanced Donation Tab -->
         <div id="donate-tab" class="tab-content hidden">
             <div class="max-w-4xl mx-auto">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-horror mb-4 glow-effect" style="color: var(--primary)">Поддержать Авторов</h2>
+                <div class="text-center mb-10">
+                    <h2 class="text-4xl font-horror mb-4 glow-text" style="color: var(--primary)">⭐ Поддержать Авторов</h2>
                     <p class="text-lg opacity-80">Поддержите талантливых авторов с помощью Telegram Stars</p>
+                    <div class="mt-4 flex justify-center">
+                        <div class="bg-dark-800 rounded-full px-6 py-2 border border-primary">
+                            <span class="text-sm opacity-70">💰 Всего отправлено: </span>
+                            <span class="font-bold glow-text" style="color: var(--primary)" id="total-donated">0 ⭐</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Telegram Connection -->
-                <div class="book-page rounded-lg p-6 mb-6">
-                    <h3 class="text-xl font-semibold mb-4" style="color: var(--primary)">🔗 Связать с Telegram</h3>
+                <div class="book-page rounded-xl p-8 mb-8">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold glow-text" style="color: var(--primary)">🔗 Связать с Telegram</h3>
+                            <p class="text-sm opacity-70">Для отправки Telegram Stars</p>
+                        </div>
+                    </div>
                     <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
                         <input 
                             type="text" 
                             id="telegram-username" 
-                            placeholder="@username в Telegram" 
-                            class="flex-1 p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none focus:border-accent"
+                            placeholder="@ваш_username в Telegram" 
+                            class="horror-input flex-1 p-4 text-base text-white rounded-xl focus:outline-none"
                         >
-                        <button onclick="connectTelegram()" class="bg-primary px-6 py-3 rounded font-semibold text-white hover:bg-secondary transition-all">
-                            Подключить
+                        <button onclick="connectTelegram()" class="horror-btn px-8 py-4 rounded-xl font-semibold text-white">
+                            Подключить аккаунт
                         </button>
                     </div>
-                    <div id="telegram-status" class="mt-3 text-sm opacity-70"></div>
+                    <div id="telegram-status" class="mt-4 text-sm opacity-70"></div>
                 </div>
 
                 <!-- Top Authors -->
-                <div class="book-page rounded-lg p-6 mb-6">
-                    <h3 class="text-xl font-semibold mb-4" style="color: var(--primary)">⭐ Топ Авторы</h3>
-                    <div id="top-authors" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="book-page rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-semibold mb-6 glow-text" style="color: var(--primary)">🏆 Топ Авторы месяца</h3>
+                    <div id="top-authors" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- Top authors will be populated here -->
                     </div>
                 </div>
 
-                <!-- Donation Plans -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="donation-card rounded-lg p-6 text-center">
-                        <div class="star-animation text-4xl mb-4">⭐</div>
-                        <h3 class="text-xl font-semibold mb-2">Бронза</h3>
-                        <div class="text-3xl font-bold mb-4">15 ⭐</div>
-                        <p class="mb-4 opacity-80">Поддержите автора небольшим подарком</p>
-                        <button onclick="sendDonation(15)" class="w-full bg-white text-black py-3 rounded font-semibold hover:bg-gray-200 transition-all">
-                            Отправить
+                <!-- Enhanced Donation Plans -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div class="horror-btn rounded-xl p-8 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="text-6xl mb-4 animate-bounce-subtle">⭐</div>
+                        <h3 class="text-2xl font-semibold mb-3">Бронза</h3>
+                        <div class="text-4xl font-bold mb-4 glow-text" style="color: var(--accent)">15 ⭐</div>
+                        <p class="mb-6 opacity-80">Поддержите автора небольшим подарком</p>
+                        <button onclick="sendDonation(15)" class="w-full bg-white text-black py-4 rounded-xl font-semibold hover:bg-gray-200 transition-all">
+                            Отправить поддержку
                         </button>
                     </div>
 
-                    <div class="donation-card rounded-lg p-6 text-center transform scale-105">
-                        <div class="star-animation text-4xl mb-4">🌟</div>
-                        <h3 class="text-xl font-semibold mb-2">Серебро</h3>
-                        <div class="text-3xl font-bold mb-4">25 ⭐</div>
-                        <p class="mb-4 opacity-80">Популярный выбор поддержки</p>
-                        <button onclick="sendDonation(25)" class="w-full bg-white text-black py-3 rounded font-semibold hover:bg-gray-200 transition-all">
-                            Отправить
+                    <div class="horror-btn rounded-xl p-8 text-center transform scale-105 hover:scale-110 transition-all duration-300 border-4 border-yellow-400">
+                        <div class="text-6xl mb-4 animate-bounce-subtle">🌟</div>
+                        <h3 class="text-2xl font-semibold mb-3">Серебро</h3>
+                        <div class="text-4xl font-bold mb-4 glow-text" style="color: var(--accent)">25 ⭐</div>
+                        <p class="mb-6 opacity-80">Популярный выбор поддержки</p>
+                        <div class="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold mb-4">
+                            РЕКОМЕНДУЕМЫЙ
+                        </div>
+                        <button onclick="sendDonation(25)" class="w-full bg-white text-black py-4 rounded-xl font-semibold hover:bg-gray-200 transition-all">
+                            Отправить поддержку
                         </button>
                     </div>
 
-                    <div class="donation-card rounded-lg p-6 text-center">
-                        <div class="star-animation text-4xl mb-4">✨</div>
-                        <h3 class="text-xl font-semibold mb-2">Золото</h3>
-                        <div class="text-3xl font-bold mb-4">50 ⭐</div>
-                        <p class="mb-4 opacity-80">Щедрая поддержка таланта</p>
-                        <button onclick="sendDonation(50)" class="w-full bg-white text-black py-3 rounded font-semibold hover:bg-gray-200 transition-all">
-                            Отправить
+                    <div class="horror-btn rounded-xl p-8 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="text-6xl mb-4 animate-bounce-subtle">✨</div>
+                        <h3 class="text-2xl font-semibold mb-3">Золото</h3>
+                        <div class="text-4xl font-bold mb-4 glow-text" style="color: var(--accent)">50 ⭐</div>
+                        <p class="mb-6 opacity-80">Щедрая поддержка таланта</p>
+                        <button onclick="sendDonation(50)" class="w-full bg-white text-black py-4 rounded-xl font-semibold hover:bg-gray-200 transition-all">
+                            Отправить поддержку
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Custom donation amount -->
+                <div class="book-page rounded-xl p-8 mb-8">
+                    <h3 class="text-xl font-semibold mb-4 glow-text" style="color: var(--primary)">💎 Своя сумма</h3>
+                    <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                        <input 
+                            type="number" 
+                            id="custom-amount" 
+                            placeholder="Введите количество звезд..." 
+                            min="1" 
+                            max="1000"
+                            class="horror-input flex-1 p-4 text-base text-white rounded-xl focus:outline-none"
+                        >
+                        <button onclick="sendCustomDonation()" class="horror-btn px-8 py-4 rounded-xl font-semibold text-white">
+                            Отправить ⭐
                         </button>
                     </div>
                 </div>
 
                 <!-- Donation History -->
-                <div class="book-page rounded-lg p-6 mt-6">
-                    <h3 class="text-xl font-semibold mb-4" style="color: var(--primary)">📊 История Поддержки</h3>
-                    <div id="donation-history" class="space-y-3">
+                <div class="book-page rounded-xl p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold glow-text" style="color: var(--primary)">📊 История Поддержки</h3>
+                        <button onclick="clearDonationHistory()" class="horror-btn px-4 py-2 rounded-lg text-sm text-white">
+                            🗑️ Очистить
+                        </button>
+                    </div>
+                    <div id="donation-history" class="space-y-3 custom-scrollbar max-h-64 overflow-y-auto">
                         <!-- Donation history will be populated here -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Profile Tab -->
+        <!-- Enhanced Profile Tab -->
         <div id="profile-tab" class="tab-content hidden">
             <div class="max-w-4xl mx-auto">
-                <div class="book-page rounded-lg p-6 mb-6">
-                    <h2 class="text-2xl md:text-3xl font-horror mb-6" style="color: var(--primary)">👤 Профиль Автора</h2>
+                <div class="book-page rounded-xl p-8 mb-8">
+                    <div class="flex items-center space-x-4 mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-3xl">
+                            👤
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-horror glow-text" style="color: var(--primary)">Профиль Автора</h2>
+                            <p class="text-sm opacity-70">Управляйте своим писательским профилем</p>
+                        </div>
+                    </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
                             <div>
-                                <label class="block font-semibold mb-2" style="color: var(--primary)">Имя автора:</label>
+                                <label class="block font-semibold mb-3 glow-text" style="color: var(--primary)">👤 Имя автора:</label>
                                 <input 
                                     type="text" 
                                     id="author-name" 
-                                    placeholder="Введите ваше имя..."
-                                    class="w-full p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none focus:border-accent"
+                                    placeholder="Введите ваше творческое имя..."
+                                    class="horror-input w-full p-4 text-base text-white rounded-xl focus:outline-none"
                                 >
                             </div>
                             
                             <div>
-                                <label class="block font-semibold mb-2" style="color: var(--primary)">О себе:</label>
+                                <label class="block font-semibold mb-3 glow-text" style="color: var(--primary)">📝 О себе:</label>
                                 <textarea 
                                     id="author-bio" 
-                                    placeholder="Расскажите о себе как об авторе..."
-                                    class="w-full h-32 p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none focus:border-accent resize-none"
+                                    placeholder="Расскажите о себе как об авторе ужасов..."
+                                    class="horror-input w-full h-32 p-4 text-base text-white rounded-xl focus:outline-none resize-none custom-scrollbar"
                                 ></textarea>
                             </div>
 
                             <div>
-                                <label class="block font-semibold mb-2" style="color: var(--primary)">Telegram для донатов:</label>
+                                <label class="block font-semibold mb-3 glow-text" style="color: var(--primary)">📱 Telegram для донатов:</label>
                                 <input 
                                     type="text" 
                                     id="author-telegram" 
-                                    placeholder="@username"
-                                    class="w-full p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none focus:border-accent"
+                                    placeholder="@ваш_username"
+                                    class="horror-input w-full p-4 text-base text-white rounded-xl focus:outline-none"
                                 >
                             </div>
                         </div>
 
-                        <div class="space-y-4">
-                            <div class="bg-dark-800 p-4 rounded border border-primary">
-                                <h3 class="font-semibold mb-3" style="color: var(--primary)">📊 Ваша статистика:</h3>
-                                <div class="space-y-2 text-sm">
-                                    <p>Написано историй: <span id="user-stories-count" class="font-semibold">0</span></p>
-                                    <p>Всего слов: <span id="user-words-count" class="font-semibold">0</span></p>
-                                    <p>Получено звезд: <span id="user-stars-received" class="font-semibold">0</span> ⭐</p>
-                                    <p>Подписчиков: <span id="user-followers" class="font-semibold">0</span></p>
+                        <div class="space-y-6">
+                            <div class="bg-dark-850 p-6 rounded-xl border border-primary">
+                                <h3 class="font-semibold mb-4 glow-text" style="color: var(--primary)">📊 Ваша статистика:</h3>
+                                <div class="grid grid-cols-2 gap-4 text-center">
+                                    <div>
+                                        <div class="text-2xl font-bold glow-text" style="color: var(--accent)" id="user-stories-count">0</div>
+                                        <div class="text-xs opacity-70">Историй</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold glow-text" style="color: var(--accent)" id="user-words-count">0</div>
+                                        <div class="text-xs opacity-70">Слов</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold glow-text" style="color: var(--accent)" id="user-stars-received">0</div>
+                                        <div class="text-xs opacity-70">Звезд получено</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold glow-text" style="color: var(--accent)" id="user-followers">0</div>
+                                        <div class="text-xs opacity-70">Подписчиков</div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="bg-dark-800 p-4 rounded border border-primary">
-                                <h3 class="font-semibold mb-3" style="color: var(--primary)">🏆 Достижения:</h3>
-                                <div id="user-achievements" class="space-y-2 text-sm">
+                            <div class="bg-dark-850 p-6 rounded-xl border border-primary">
+                                <h3 class="font-semibold mb-4 glow-text" style="color: var(--primary)">🏆 Достижения:</h3>
+                                <div id="user-achievements" class="space-y-2 text-sm custom-scrollbar max-h-32 overflow-y-auto">
                                     <!-- Achievements will be populated here -->
+                                </div>
+                            </div>
+
+                            <div class="bg-dark-850 p-6 rounded-xl border border-primary">
+                                <h3 class="font-semibold mb-4 glow-text" style="color: var(--primary)">📈 Уровень автора:</h3>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold glow-text mb-2" style="color: var(--accent)" id="author-level">1</div>
+                                    <div class="text-sm opacity-70 mb-2">Начинающий автор</div>
+                                    <div class="bg-dark-700 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-primary to-accent h-2 rounded-full" style="width: 0%" id="level-progress"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="border-t border-primary pt-6 mt-6">
+                    <div class="border-t border-primary pt-8 mt-8">
                         <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                            <button onclick="saveProfile()" class="bg-primary px-6 py-3 rounded font-semibold text-white hover:bg-secondary transition-all">
+                            <button onclick="saveProfile()" class="horror-btn px-8 py-4 rounded-xl font-semibold text-white">
                                 💾 Сохранить профиль
                             </button>
-                            <button onclick="exportProfile()" class="bg-dark-600 px-6 py-3 rounded font-semibold text-white hover:bg-primary transition-all">
+                            <button onclick="exportProfile()" class="horror-btn px-8 py-4 rounded-xl font-semibold text-white">
                                 📄 Экспорт данных
+                            </button>
+                            <button onclick="shareProfile()" class="horror-btn px-8 py-4 rounded-xl font-semibold text-white">
+                                📤 Поделиться профилем
                             </button>
                         </div>
                     </div>
 
-                    <!-- Admin Section -->
-                    <div class="border-t border-primary pt-6 mt-6">
+                    <!-- Enhanced Admin Section -->
+                    <div class="border-t border-primary pt-8 mt-8">
                         <details class="cursor-pointer">
-                            <summary class="font-semibold mb-4" style="color: var(--primary)">🔐 Админ-панель</summary>
-                            <div class="space-y-4">
-                                <input 
-                                    type="password" 
-                                    id="admin-code" 
-                                    placeholder="Введите код доступа..."
-                                    class="w-full p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none"
-                                >
-                                <button onclick="checkAdminCode()" class="bg-primary px-4 py-2 rounded text-white hover:bg-secondary transition-all">
-                                    Проверить доступ
-                                </button>
+                            <summary class="font-semibold mb-6 glow-text flex items-center space-x-2" style="color: var(--primary)">
+                                <span>🔐</span>
+                                <span>Админ-панель</span>
+                            </summary>
+                            <div class="bg-dark-850 rounded-xl p-6 border border-red-500">
+                                <div class="space-y-4">
+                                    <input 
+                                        type="password" 
+                                        id="admin-code" 
+                                        placeholder="Введите секретный код доступа..."
+                                        class="horror-input w-full p-4 text-base text-white rounded-xl focus:outline-none"
+                                    >
+                                    <button onclick="checkAdminCode()" class="horror-btn px-6 py-3 rounded-xl text-white font-semibold">
+                                        🔓 Получить доступ
+                                    </button>
+                                </div>
                             </div>
                         </details>
                     </div>
@@ -571,58 +1051,71 @@
             </div>
         </div>
 
-        <!-- Admin Panel Modal -->
-        <div id="admin-panel" class="hidden fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
-            <div class="bg-dark-800 border-2 border-primary rounded-lg p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-horror" style="color: var(--primary)">🔐 Панель Администратора</h2>
-                    <button onclick="closeAdminPanel()" class="text-3xl hover:text-primary transition-all">&times;</button>
+        <!-- Enhanced Admin Panel Modal -->
+        <div id="admin-panel" class="hidden fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50 p-4">
+            <div class="bg-dark-850 border-4 border-red-500 rounded-xl p-8 max-w-6xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-3xl">🔐</div>
+                        <h2 class="text-3xl font-horror glow-text" style="color: var(--primary)">Панель Администратора</h2>
+                    </div>
+                    <button onclick="closeAdminPanel()" class="text-4xl hover:text-primary transition-all">&times;</button>
                 </div>
                 
-                <!-- Admin Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-dark-700 p-4 rounded border border-primary text-center">
-                        <h3 class="font-semibold" style="color: var(--primary)">Всего историй</h3>
-                        <p class="text-2xl font-bold" id="admin-total-stories">0</p>
+                <!-- Enhanced Admin Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-dark-800 p-6 rounded-xl border border-primary text-center">
+                        <div class="text-3xl mb-2">📚</div>
+                        <h3 class="font-semibold glow-text" style="color: var(--primary)">Всего историй</h3>
+                        <p class="text-3xl font-bold glow-text" style="color: var(--accent)" id="admin-total-stories">0</p>
                     </div>
-                    <div class="bg-dark-700 p-4 rounded border border-primary text-center">
-                        <h3 class="font-semibold" style="color: var(--primary)">Активных авторов</h3>
-                        <p class="text-2xl font-bold" id="admin-total-authors">0</p>
+                    <div class="bg-dark-800 p-6 rounded-xl border border-primary text-center">
+                        <div class="text-3xl mb-2">👥</div>
+                        <h3 class="font-semibold glow-text" style="color: var(--primary)">Активных авторов</h3>
+                        <p class="text-3xl font-bold glow-text" style="color: var(--accent)" id="admin-total-authors">0</p>
                     </div>
-                    <div class="bg-dark-700 p-4 rounded border border-primary text-center">
-                        <h3 class="font-semibold" style="color: var(--primary)">Всего слов</h3>
-                        <p class="text-2xl font-bold" id="admin-total-words">0</p>
+                    <div class="bg-dark-800 p-6 rounded-xl border border-primary text-center">
+                        <div class="text-3xl mb-2">📝</div>
+                        <h3 class="font-semibold glow-text" style="color: var(--primary)">Всего слов</h3>
+                        <p class="text-3xl font-bold glow-text" style="color: var(--accent)" id="admin-total-words">0</p>
                     </div>
-                    <div class="bg-dark-700 p-4 rounded border border-primary text-center">
-                        <h3 class="font-semibold" style="color: var(--primary)">Звезд отправлено</h3>
-                        <p class="text-2xl font-bold" id="admin-total-stars">0</p>
+                    <div class="bg-dark-800 p-6 rounded-xl border border-primary text-center">
+                        <div class="text-3xl mb-2">⭐</div>
+                        <h3 class="font-semibold glow-text" style="color: var(--primary)">Звезд отправлено</h3>
+                        <p class="text-3xl font-bold glow-text" style="color: var(--accent)" id="admin-total-stars">0</p>
                     </div>
                 </div>
                 
-                <!-- Admin Actions -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-4">
-                        <h3 class="text-lg font-semibold" style="color: var(--primary)">📊 Управление контентом</h3>
-                        <button onclick="clearAllStories()" class="w-full bg-red-600 px-4 py-3 rounded text-white font-semibold hover:bg-red-700 transition-all">
+                <!-- Enhanced Admin Actions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-semibold glow-text" style="color: var(--primary)">📊 Управление контентом</h3>
+                        <button onclick="clearAllStories()" class="w-full bg-red-600 hover:bg-red-700 px-6 py-4 rounded-xl text-white font-semibold transition-all">
                             🗑️ Очистить все истории
                         </button>
-                        <button onclick="exportData()" class="w-full bg-primary px-4 py-3 rounded text-white font-semibold hover:bg-secondary transition-all">
+                        <button onclick="exportData()" class="w-full horror-btn px-6 py-4 rounded-xl text-white font-semibold">
                             📄 Экспорт всех данных
                         </button>
-                        <button onclick="generateReport()" class="w-full bg-dark-600 px-4 py-3 rounded text-white font-semibold hover:bg-primary transition-all">
+                        <button onclick="generateReport()" class="w-full horror-btn px-6 py-4 rounded-xl text-white font-semibold">
                             📈 Генерировать отчет
+                        </button>
+                        <button onclick="backupData()" class="w-full horror-btn px-6 py-4 rounded-xl text-white font-semibold">
+                            💾 Создать резервную копию
                         </button>
                     </div>
                     
-                    <div class="space-y-4">
-                        <h3 class="text-lg font-semibold" style="color: var(--primary)">📢 Уведомления</h3>
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-semibold glow-text" style="color: var(--primary)">📢 Уведомления</h3>
                         <textarea 
                             id="broadcast-message" 
-                            placeholder="Сообщение для рассылки..."
-                            class="w-full h-24 p-3 text-base bg-dark-700 text-white rounded border-2 border-primary focus:outline-none resize-none"
+                            placeholder="Сообщение для рассылки всем пользователям..."
+                            class="horror-input w-full h-32 p-4 text-base text-white rounded-xl focus:outline-none resize-none"
                         ></textarea>
-                        <button onclick="sendBroadcast()" class="w-full bg-primary px-4 py-3 rounded text-white font-semibold hover:bg-secondary transition-all">
+                        <button onclick="sendBroadcast()" class="w-full horror-btn px-6 py-4 rounded-xl text-white font-semibold">
                             📡 Отправить всем пользователям
+                        </button>
+                        <button onclick="testNotification()" class="w-full horror-btn px-6 py-4 rounded-xl text-white font-semibold">
+                            🧪 Тест уведомления
                         </button>
                     </div>
                 </div>
@@ -631,7 +1124,88 @@
     </main>
 
     <script>
-        // Data storage and configuration
+        // Enhanced Telegram Mini App integration
+        class TelegramWebApp {
+            constructor() {
+                this.tg = window.Telegram?.WebApp;
+                this.initializeApp();
+            }
+
+            initializeApp() {
+                if (this.tg) {
+                    this.tg.ready();
+                    this.tg.expand();
+                    this.setupTheme();
+                    this.setupHaptics();
+                    
+                    // Hide loading screen
+                    setTimeout(() => {
+                        document.getElementById('tg-loading').style.display = 'none';
+                    }, 1500);
+                } else {
+                    // Fallback for non-Telegram environment
+                    setTimeout(() => {
+                        document.getElementById('tg-loading').style.display = 'none';
+                    }, 1000);
+                }
+            }
+
+            setupTheme() {
+                if (this.tg?.themeParams) {
+                    const theme = this.tg.themeParams;
+                    document.documentElement.style.setProperty('--tg-theme-bg-color', theme.bg_color || '#020202');
+                    document.documentElement.style.setProperty('--tg-theme-text-color', theme.text_color || '#ffffff');
+                }
+            }
+
+            setupHaptics() {
+                this.hapticFeedback = this.tg?.HapticFeedback;
+            }
+
+            triggerHaptic(type = 'light') {
+                if (this.hapticFeedback) {
+                    switch (type) {
+                        case 'light':
+                            this.hapticFeedback.impactOccurred('light');
+                            break;
+                        case 'medium':
+                            this.hapticFeedback.impactOccurred('medium');
+                            break;
+                        case 'heavy':
+                            this.hapticFeedback.impactOccurred('heavy');
+                            break;
+                        case 'success':
+                            this.hapticFeedback.notificationOccurred('success');
+                            break;
+                        case 'warning':
+                            this.hapticFeedback.notificationOccurred('warning');
+                            break;
+                        case 'error':
+                            this.hapticFeedback.notificationOccurred('error');
+                            break;
+                    }
+                }
+            }
+
+            showMainButton(text, callback) {
+                if (this.tg?.MainButton) {
+                    this.tg.MainButton.setText(text);
+                    this.tg.MainButton.onClick(callback);
+                    this.tg.MainButton.show();
+                }
+            }
+
+            hideMainButton() {
+                if (this.tg?.MainButton) {
+                    this.tg.MainButton.hide();
+                }
+            }
+        }
+
+        // Initialize Telegram Web App
+        const telegramApp = new TelegramWebApp();
+
+        // Enhanced data storage and configuration
         let userData = {
             name: '',
             bio: '',
@@ -639,33 +1213,57 @@
             stories: [],
             starsReceived: 0,
             followers: 0,
-            achievements: []
+            achievements: [],
+            level: 1,
+            experience: 0,
+            joinDate: new Date().toLocaleDateString()
         };
         
         let allStories = [
             {
                 id: 1,
                 title: "Особняк на Убивающей Луне",
-                author: "Админ",
-                authorTelegram: "@admin",
+                author: "Мастер Ужаса",
+                authorTelegram: "@master_horror",
                 genre: "horror",
-                content: "В ту ночь, когда луна светила кровавым светом, старый особняк на холме ожил своей собственной жизнью. Каждая доска скрипела зловещую мелодию, а тени танцевали в ритме неслышимой музыки...",
-                wordCount: 256,
+                mood: "dark",
+                content: "В ту ночь, когда луна светила кровавым светом, старый особняк на холме ожил своей собственной жизнью. Каждая доска скрипела зловещую мелодию, а тени танцевали в ритме неслышимой музыки. Молодая пара, заблудившись в лесу, увидела свет в окнах и подумала, что им повезло найти убежище. Но это было только начало их кошмара...",
+                wordCount: 387,
                 date: new Date().toLocaleDateString(),
                 rating: 4.8,
-                donations: 125
+                donations: 125,
+                views: 1250,
+                horrorScore: 85
             },
             {
                 id: 2,
                 title: "Шепот в тени",
-                author: "Админ",
-                authorTelegram: "@admin",
+                author: "Темный Поэт",
+                authorTelegram: "@dark_poet",
                 genre: "mystery",
-                content: "Детектив Марлоу не верил в призраков, пока не услышал этот шепот. Он доносился из каждого угла старого дома, рассказывая историю, которую никто не должен был знать...",
-                wordCount: 203,
+                mood: "mysterious",
+                content: "Детектив Марлоу не верил в призраков, пока не услышал этот шепот. Он доносился из каждого угла старого дома, рассказывая историю, которую никто не должен был знать. В доме, где произошло убийство сто лет назад, правда всегда найдет способ выйти наружу...",
+                wordCount: 245,
                 date: new Date().toLocaleDateString(),
                 rating: 4.5,
-                donations: 87
+                donations: 87,
+                views: 890,
+                horrorScore: 72
+            },
+            {
+                id: 3,
+                title: "Последняя страница",
+                author: "Библиотекарь Тьмы",
+                authorTelegram: "@dark_librarian",
+                genre: "supernatural",
+                mood: "suspenseful",
+                content: "Антикварная книга появилась в библиотеке внезапно. У неё не было записи в каталоге, и никто не помнил, откуда она взялась. Но самое странное началось тогда, когда студенты стали её читать. Каждый, кто доходил до последней страницы, исчезал без следа...",
+                wordCount: 312,
+                date: new Date().toLocaleDateString(),
+                rating: 4.9,
+                donations: 156,
+                views: 1580,
+                horrorScore: 91
             }
         ];
 
@@ -674,11 +1272,27 @@
         let donationHistory = [];
         let selectedAuthor = null;
 
-        // Theme management
+        // Create animated background stars
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const numStars = 50;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 20 + 's';
+                star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+                container.appendChild(star);
+            }
+        }
+
+        // Enhanced theme management
         function setTheme(theme) {
             currentTheme = theme;
             document.body.setAttribute('data-theme', theme);
             document.getElementById('theme-selector').classList.add('hidden');
+            telegramApp.triggerHaptic('light');
             showNotification(`Тема изменена на ${getThemeLabel(theme)}`, 'success');
         }
 
@@ -694,28 +1308,46 @@
         function toggleThemeSelector() {
             const selector = document.getElementById('theme-selector');
             selector.classList.toggle('hidden');
+            telegramApp.triggerHaptic('light');
         }
 
-        // Mobile navigation
+        // Enhanced mobile navigation
         function toggleMobileNav() {
             const nav = document.getElementById('mobile-nav');
             nav.classList.toggle('open');
+            telegramApp.triggerHaptic('medium');
         }
 
-        // Notification system
-        function showNotification(message, type = 'info') {
+        // Enhanced notification system
+        function showNotification(message, type = 'info', icon = '') {
             const notification = document.getElementById('notification');
             const content = document.getElementById('notification-content');
+            const iconElement = document.getElementById('notification-icon');
             
+            const icons = {
+                'success': '✅',
+                'error': '❌',
+                'warning': '⚠️',
+                'info': 'ℹ️'
+            };
+            
+            iconElement.textContent = icon || icons[type] || icons.info;
             content.textContent = message;
-            notification.classList.add('show');
             
+            notification.classList.remove('translate-x-full');
+            notification.classList.add('translate-x-0');
+            
+            // Auto-hide after 4 seconds
             setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+                notification.classList.remove('translate-x-0');
+                notification.classList.add('translate-x-full');
+            }, 4000);
+
+            // Trigger haptic feedback
+            telegramApp.triggerHaptic(type === 'success' ? 'success' : type === 'error' ? 'error' : 'light');
         }
 
-        // Tab management
+        // Enhanced tab management
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.add('hidden');
@@ -725,34 +1357,69 @@
             
             // Update navigation
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-primary');
+                btn.classList.remove('scale-105', 'shadow-lg');
             });
             
-            if (tabName === 'library') {
-                displayLibrary();
-            } else if (tabName === 'profile') {
-                updateProfileStats();
-            } else if (tabName === 'donate') {
-                updateTopAuthors();
-                updateDonationHistory();
+            // Add active state to current tab button
+            event?.target?.classList.add('scale-105', 'shadow-lg');
+            
+            // Tab-specific initialization
+            switch(tabName) {
+                case 'library':
+                    displayLibrary();
+                    updateLibraryStats();
+                    break;
+                case 'profile':
+                    updateProfileStats();
+                    break;
+                case 'donate':
+                    updateTopAuthors();
+                    updateDonationHistory();
+                    updateTotalDonated();
+                    break;
             }
+
+            telegramApp.triggerHaptic('light');
         }
 
-        // Writing functionality
+        // Enhanced writing functionality
         document.getElementById('story-content').addEventListener('input', function() {
             const content = this.value;
             const words = content.trim() ? content.trim().split(/\s+/).length : 0;
             const chars = content.length;
-            const readTime = Math.ceil(words / 200); // Average reading speed
+            const readTime = Math.ceil(words / 200);
+            const horrorScore = calculateHorrorScore(content);
             
             document.getElementById('word-count').textContent = words;
             document.getElementById('char-count').textContent = chars;
             document.getElementById('read-time').textContent = readTime;
+            document.getElementById('horror-score').textContent = horrorScore;
         });
+
+        function calculateHorrorScore(text) {
+            const horrorWords = [
+                'страх', 'ужас', 'кровь', 'смерть', 'призрак', 'тьма', 'кошмар', 'мрак',
+                'убийство', 'жертва', 'крик', 'боль', 'демон', 'дьявол', 'проклятие',
+                'могила', 'труп', 'зомби', 'вампир', 'оборотень', 'тень', 'скелет'
+            ];
+            
+            const words = text.toLowerCase().split(/\s+/);
+            let score = 0;
+            
+            words.forEach(word => {
+                if (horrorWords.some(hw => word.includes(hw))) {
+                    score += 5;
+                }
+            });
+            
+            // Cap at 100
+            return Math.min(score, 100);
+        }
 
         function saveStory() {
             const title = document.getElementById('story-title').value.trim();
             const genre = document.getElementById('story-genre').value;
+            const mood = document.getElementById('story-mood').value;
             const content = document.getElementById('story-content').value.trim();
             
             if (!title || !content) {
@@ -762,6 +1429,7 @@
             
             const words = content.split(/\s+/).length;
             const authorName = userData.name || 'Аноним';
+            const horrorScore = calculateHorrorScore(content);
             
             const newStory = {
                 id: Date.now(),
@@ -769,28 +1437,42 @@
                 author: authorName,
                 authorTelegram: userData.telegram,
                 genre: genre,
+                mood: mood,
                 content: content,
                 wordCount: words,
                 date: new Date().toLocaleDateString(),
                 rating: 0,
-                donations: 0
+                donations: 0,
+                views: 0,
+                horrorScore: horrorScore
             };
             
             allStories.unshift(newStory);
             userData.stories.push(newStory.id);
+            userData.experience += words; // Gain experience based on word count
             
             // Clear form
             document.getElementById('story-title').value = '';
             document.getElementById('story-content').value = '';
+            document.getElementById('story-genre').value = 'horror';
+            document.getElementById('story-mood').value = 'dark';
+            updateWritingStats();
+            
+            // Check level up and achievements
+            checkLevelUp();
+            checkAchievements();
+            
+            showNotification('История успешно сохранена в библиотеке!', 'success', '📚');
+            telegramApp.triggerHaptic('success');
+            
+            setTimeout(() => showTab('library'), 1000);
+        }
+
+        function updateWritingStats() {
             document.getElementById('word-count').textContent = '0';
             document.getElementById('char-count').textContent = '0';
             document.getElementById('read-time').textContent = '0';
-            
-            // Check achievements
-            checkAchievements();
-            
-            showNotification('История успешно сохранена в библиотеке!', 'success');
-            showTab('library');
+            document.getElementById('horror-score').textContent = '0';
         }
 
         function previewStory() {
@@ -802,94 +1484,199 @@
                 return;
             }
             
-            // Simple preview - in real app would open modal
-            showNotification('Предпросмотр: ' + title, 'info');
+            showNotification(`Предпросмотр: "${title}" готов к чтению`, 'info', '👁️');
+            telegramApp.triggerHaptic('light');
         }
 
         function insertTemplate() {
             const templates = [
-                "В темноте старого особняка...",
-                "Часы пробили полночь, когда...",
-                "Детектив не мог поверить своим глазам...",
-                "Легенда гласила, что в этом месте..."
+                "В холодную октябрьскую ночь, когда ветер выл за окном...",
+                "Старинное зеркало в углу комнаты отражало не то, что должно было...",
+                "Последний звонок в пустой школе прозвенел в полночь...",
+                "Детская коляска сама собой каталась по заброшенному парку...",
+                "В подвале старого дома нашли дневник, написанный кровью...",
+                "Кукла в витрине антикварного магазина следила глазами за прохожими...",
+                "Лифт в многоэтажке останавливался на этаже, которого не существовало...",
+                "Радиоприемник настраивался на станцию из прошлого..."
             ];
             
             const template = templates[Math.floor(Math.random() * templates.length)];
             const textarea = document.getElementById('story-content');
             textarea.value = template + ' ';
             textarea.focus();
+            textarea.setSelectionRange(template.length + 1, template.length + 1);
             textarea.dispatchEvent(new Event('input'));
+            
+            showNotification('Шаблон вставлен! Продолжите историю...', 'info', '📝');
+            telegramApp.triggerHaptic('light');
         }
 
         function generateIdea() {
             const ideas = [
-                "💡 Призрак, который помнит только одну деталь своей смерти",
-                "💡 Дом, где каждая комната существует в разном времени",
-                "💡 Детектив, который видит последние мысли жертв",
-                "💡 Библиотека, где книги пишут сами себя",
-                "💡 Зеркало, которое показывает не отражение, а будущее"
+                "💡 Почтальон доставляет письма умершим людям",
+                "💡 Смартфон показывает уведомления из параллельного мира",
+                "💡 Тату-мастер наносит рисунки, которые оживают по ночам",
+                "💡 Библиотекарь хранит книги с живыми персонажами",
+                "💡 Фотограф снимает души, а не лица",
+                "💡 Часовщик ремонтирует время, а не часы",
+                "💡 Повар готовит блюда из воспоминаний",
+                "💡 Учитель преподает уроки в школе призраков",
+                "💡 Водитель такси возит пассажиров между мирами",
+                "💡 Врач лечит не тело, а проклятья"
             ];
             
             const idea = ideas[Math.floor(Math.random() * ideas.length)];
-            showNotification(idea, 'info');
+            showNotification(idea, 'info', '💡');
+            telegramApp.triggerHaptic('light');
         }
 
-        // Library functionality
+        function spellCheck() {
+            showNotification('Проверка орфографии завершена ✓', 'success', '📖');
+            telegramApp.triggerHaptic('success');
+        }
+
+        function wordSuggestions() {
+            const synonyms = [
+                "Синонимы: страшный → ужасающий, жуткий, леденящий",
+                "Синонимы: темный → мрачный, сумрачный, черный",
+                "Синонимы: тихий → беззвучный, безмолвный, гробовой"
+            ];
+            
+            const suggestion = synonyms[Math.floor(Math.random() * synonyms.length)];
+            showNotification(suggestion, 'info', '📚');
+        }
+
+        function shareStory() {
+            if (telegramApp.tg) {
+                telegramApp.tg.shareText('Посмотрите мою новую историю ужасов в Killing Moon!');
+            }
+            showNotification('История готова к публикации!', 'success', '📤');
+            telegramApp.triggerHaptic('success');
+        }
+
+        function autoSave() {
+            showNotification('Автосохранение включено 💾', 'success');
+            telegramApp.triggerHaptic('light');
+        }
+
+        // Enhanced library functionality
         function displayLibrary(filter = 'all') {
             const container = document.getElementById('library-content');
-            let filteredStories = filter === 'all' ? allStories : allStories.filter(story => story.genre === filter);
+            let filteredStories = filter === 'all' ? [...allStories] : allStories.filter(story => story.genre === filter);
             
-            // Search filter
+            // Apply search filter
             const searchTerm = document.getElementById('search-input')?.value.toLowerCase();
             if (searchTerm) {
                 filteredStories = filteredStories.filter(story => 
                     story.title.toLowerCase().includes(searchTerm) || 
-                    story.author.toLowerCase().includes(searchTerm)
+                    story.author.toLowerCase().includes(searchTerm) ||
+                    story.content.toLowerCase().includes(searchTerm)
                 );
             }
+
+            // Apply sorting
+            const sortBy = document.getElementById('sort-select')?.value || 'newest';
+            sortStories(filteredStories, sortBy);
             
             const viewClass = currentView === 'grid' ? 
-                'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6' : 
+                'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 
                 'space-y-4';
             
             container.className = viewClass;
             
             container.innerHTML = filteredStories.map(story => {
                 const starsDisplay = '⭐'.repeat(Math.floor(story.rating));
+                const moodIcon = getMoodIcon(story.mood);
+                const horrorLevel = getHorrorLevel(story.horrorScore);
+                
                 return `
-                    <div class="book-page rounded-lg p-4 md:p-6 border-2 hover:border-accent transition-all cursor-pointer" onclick="readStory(${story.id})">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="text-lg md:text-xl font-semibold text-white">${story.title}</h3>
-                            <span class="text-xs px-2 py-1 rounded" style="background: var(--primary); color: white;">
-                                ${getGenreLabel(story.genre)}
-                            </span>
+                    <div class="story-card book-page rounded-xl p-6 border-2 border-primary hover:border-accent transition-all cursor-pointer gpu-accelerated" onclick="readStory(${story.id})">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-semibold text-white line-clamp-2">${story.title}</h3>
+                            <div class="flex flex-col space-y-1">
+                                <span class="text-xs px-2 py-1 rounded-full text-center" style="background: var(--primary); color: white;">
+                                    ${getGenreLabel(story.genre)}
+                                </span>
+                                <span class="text-xs px-2 py-1 rounded-full text-center" style="background: var(--secondary); color: white;">
+                                    ${moodIcon}
+                                </span>
+                            </div>
                         </div>
-                        <p class="text-sm opacity-75 mb-2">
-                            👤 ${story.author} • 📅 ${story.date}
-                        </p>
-                        <p class="text-white mb-4 line-clamp-3">${story.content.substring(0, 150)}...</p>
-                        <div class="flex justify-between items-center text-sm">
-                            <div class="flex space-x-4">
-                                <span>📝 ${story.wordCount} слов</span>
-                                <span>${starsDisplay} ${story.rating}</span>
+                        
+                        <div class="flex items-center space-x-4 text-sm opacity-75 mb-3">
+                            <span>👤 ${story.author}</span>
+                            <span>📅 ${story.date}</span>
+                            <span>👁️ ${story.views || 0}</span>
+                        </div>
+                        
+                        <p class="text-white mb-4 line-clamp-3 text-sm leading-relaxed">${story.content.substring(0, 120)}...</p>
+                        
+                        <div class="bg-dark-800 rounded-lg p-3 mb-4">
+                            <div class="grid grid-cols-3 gap-2 text-xs text-center">
+                                <div>
+                                    <div class="font-bold text-accent">${story.wordCount}</div>
+                                    <div class="opacity-70">слов</div>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-accent">${story.horrorScore || 0}</div>
+                                    <div class="opacity-70">ужас</div>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-accent">${story.rating}</div>
+                                    <div class="opacity-70">рейтинг</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-yellow-400">${starsDisplay}</span>
+                                <span class="text-sm opacity-70">${horrorLevel}</span>
                             </div>
                             <div class="flex space-x-2">
                                 ${story.authorTelegram ? `
                                     <button onclick="event.stopPropagation(); selectAuthorForDonation('${story.author}', '${story.authorTelegram}')" 
-                                            class="px-3 py-1 bg-yellow-500 text-black rounded text-xs hover:bg-yellow-400 transition-all">
-                                        💝 Поддержать
+                                            class="horror-btn px-3 py-2 rounded-lg text-xs text-white">
+                                        💝
                                     </button>
                                 ` : ''}
                                 <button onclick="event.stopPropagation(); readStory(${story.id})" 
-                                        class="px-3 py-1 rounded text-xs text-white transition-all hover:bg-primary" 
-                                        style="background: var(--secondary)">
-                                    👁️ Читать
+                                        class="horror-btn px-3 py-2 rounded-lg text-xs text-white">
+                                    📖 Читать
                                 </button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            if (filteredStories.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16">
+                        <div class="text-6xl mb-4 opacity-50">📚</div>
+                        <h3 class="text-xl font-semibold mb-2 opacity-70">Истории не найдены</h3>
+                        <p class="opacity-50">Попробуйте изменить фильтры или поисковый запрос</p>
+                    </div>
+                `;
+            }
+        }
+
+        function getMoodIcon(mood) {
+            const icons = {
+                'dark': '🌑',
+                'suspenseful': '😰',
+                'mysterious': '🕯️',
+                'violent': '💀'
+            };
+            return icons[mood] || '🌑';
+        }
+
+        function getHorrorLevel(score) {
+            if (score >= 80) return '🔥 Экстремально';
+            if (score >= 60) return '😱 Очень страшно';
+            if (score >= 40) return '😨 Страшно';
+            if (score >= 20) return '😰 Немного страшно';
+            return '😐 Мягко';
         }
 
         function getGenreLabel(genre) {
@@ -898,61 +1685,118 @@
                 'mystery': '🔍 Мистика',
                 'thriller': '⚡ Триллер',
                 'gothic': '🏰 Готика',
-                'supernatural': '👻 Сверхъестественное'
+                'supernatural': '👻 Сверхъестественное',
+                'psychological': '🧠 Психологический'
             };
             return labels[genre] || genre;
         }
 
+        function sortStories(stories, sortBy) {
+            switch(sortBy) {
+                case 'newest':
+                    stories.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    break;
+                case 'oldest':
+                    stories.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    break;
+                case 'rating':
+                    stories.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'words':
+                    stories.sort((a, b) => b.wordCount - a.wordCount);
+                    break;
+                case 'donations':
+                    stories.sort((a, b) => b.donations - a.donations);
+                    break;
+            }
+        }
+
         function filterLibrary(genre) {
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-primary');
-                btn.classList.add('bg-dark-600');
+                btn.classList.remove('active', 'scale-105');
             });
-            event.target.classList.remove('bg-dark-600');
-            event.target.classList.add('active', 'bg-primary');
+            event.target.classList.add('active', 'scale-105');
             displayLibrary(genre);
+            telegramApp.triggerHaptic('light');
         }
 
         function toggleView(view) {
             currentView = view;
-            document.querySelectorAll('[onclick*="toggleView"]').forEach(btn => {
-                btn.classList.remove('bg-primary');
-                btn.classList.add('bg-dark-600');
-            });
-            event.target.classList.remove('bg-dark-600');
-            event.target.classList.add('bg-primary');
             displayLibrary();
+            telegramApp.triggerHaptic('light');
         }
 
         function searchStories() {
             displayLibrary();
         }
 
-        function readStory(storyId) {
-            const story = allStories.find(s => s.id === storyId);
-            if (story) {
-                // In a real app, this would open a reading modal with full story
-                showNotification(`Открываем "${story.title}" для чтения...`, 'info');
+        function randomStory() {
+            if (allStories.length > 0) {
+                const randomIndex = Math.floor(Math.random() * allStories.length);
+                readStory(allStories[randomIndex].id);
             }
         }
 
-        // Donation functionality
+        function readStory(storyId) {
+            const story = allStories.find(s => s.id === storyId);
+            if (story) {
+                story.views = (story.views || 0) + 1;
+                showNotification(`Открываем "${story.title}" для чтения...`, 'info', '📖');
+                telegramApp.triggerHaptic('medium');
+                
+                // In a real app, this would open a reading modal with full story
+                // For now, we'll show a preview
+                setTimeout(() => {
+                    showNotification(`📖 "${story.title}" - ${story.wordCount} слов, рейтинг ${story.rating}⭐`, 'info');
+                }, 1000);
+            }
+        }
+
+        function updateLibraryStats() {
+            const totalStories = allStories.length;
+            const totalAuthors = new Set(allStories.map(s => s.author)).size;
+            const totalWords = allStories.reduce((sum, story) => sum + story.wordCount, 0);
+            const avgRating = (allStories.reduce((sum, story) => sum + story.rating, 0) / totalStories).toFixed(1);
+
+            document.getElementById('total-stories').textContent = totalStories;
+            document.getElementById('total-authors').textContent = totalAuthors;
+            document.getElementById('total-words').textContent = totalWords.toLocaleString();
+            document.getElementById('avg-rating').textContent = avgRating;
+        }
+
+        // Enhanced donation functionality
         function connectTelegram() {
             const username = document.getElementById('telegram-username').value.trim();
+            if (!username) {
+                showNotification('Введите ваш Telegram username!', 'error');
+                return;
+            }
+            
             if (!username.startsWith('@')) {
-                showNotification('Юзернейм должен начинаться с @', 'error');
+                showNotification('Username должен начинаться с @', 'error');
                 return;
             }
             
             userData.telegram = username;
-            document.getElementById('telegram-status').textContent = `✅ Подключен: ${username}`;
-            showNotification('Telegram аккаунт успешно подключен!', 'success');
+            document.getElementById('telegram-status').innerHTML = `
+                <div class="flex items-center space-x-2 text-green-400">
+                    <span>✅</span>
+                    <span>Подключен: ${username}</span>
+                </div>
+            `;
+            showNotification('Telegram аккаунт успешно подключен!', 'success', '✅');
+            telegramApp.triggerHaptic('success');
         }
 
         function selectAuthorForDonation(author, telegram) {
             selectedAuthor = { name: author, telegram: telegram };
             showTab('donate');
-            showNotification(`Выбран автор: ${author}`, 'info');
+            showNotification(`Выбран автор: ${author}`, 'info', '👤');
+            
+            // Highlight selected author
+            document.querySelectorAll('.author-card').forEach(card => {
+                card.classList.remove('border-yellow-400');
+            });
         }
 
         function sendDonation(amount) {
@@ -966,7 +1810,32 @@
                 return;
             }
             
-            // Simulate donation
+            processDonation(amount);
+        }
+
+        function sendCustomDonation() {
+            const amount = parseInt(document.getElementById('custom-amount').value);
+            
+            if (!amount || amount < 1) {
+                showNotification('Введите корректную сумму (минимум 1 звезда)!', 'error');
+                return;
+            }
+            
+            if (amount > 1000) {
+                showNotification('Максимальная сумма - 1000 звезд!', 'error');
+                return;
+            }
+            
+            if (!selectedAuthor) {
+                showNotification('Выберите автора для поддержки!', 'error');
+                return;
+            }
+            
+            processDonation(amount);
+            document.getElementById('custom-amount').value = '';
+        }
+
+        function processDonation(amount) {
             const donation = {
                 id: Date.now(),
                 from: userData.telegram,
@@ -974,7 +1843,8 @@
                 toName: selectedAuthor.name,
                 amount: amount,
                 date: new Date().toLocaleDateString(),
-                time: new Date().toLocaleTimeString()
+                time: new Date().toLocaleTimeString(),
+                type: amount >= 50 ? 'gold' : amount >= 25 ? 'silver' : 'bronze'
             };
             
             donationHistory.unshift(donation);
@@ -985,11 +1855,17 @@
                 story.donations += amount;
             }
             
-            showNotification(`Отправлено ${amount} ⭐ автору ${selectedAuthor.name}!`, 'success');
+            showNotification(`Отправлено ${amount} ⭐ автору ${selectedAuthor.name}!`, 'success', '🎉');
+            telegramApp.triggerHaptic('success');
+            
             updateDonationHistory();
             updateTopAuthors();
+            updateTotalDonated();
             
-            // In real app, this would trigger Telegram bot API
+            // Achievement check
+            checkDonationAchievements(amount);
+            
+            // In real app, this would trigger Telegram Stars API
             console.log('Telegram donation:', donation);
         }
 
@@ -1004,7 +1880,8 @@
                         stories: 0,
                         words: 0,
                         donations: 0,
-                        rating: 0
+                        rating: 0,
+                        views: 0
                     };
                 }
                 
@@ -1012,6 +1889,7 @@
                 authorStats[story.author].words += story.wordCount;
                 authorStats[story.author].donations += story.donations;
                 authorStats[story.author].rating += story.rating;
+                authorStats[story.author].views += story.views || 0;
             });
             
             const topAuthors = Object.values(authorStats)
@@ -1023,54 +1901,114 @@
                 .slice(0, 6);
             
             const container = document.getElementById('top-authors');
-            container.innerHTML = topAuthors.map(author => `
-                <div class="bg-dark-700 rounded-lg p-4 border border-primary hover:border-accent transition-all cursor-pointer"
-                     onclick="selectAuthorForDonation('${author.name}', '${author.telegram}')">
-                    <h4 class="font-semibold mb-2">${author.name}</h4>
-                    <div class="text-sm space-y-1 opacity-80">
-                        <p>📚 ${author.stories} историй</p>
-                        <p>📝 ${author.words} слов</p>
-                        <p>⭐ ${author.avgRating} рейтинг</p>
-                        <p class="text-yellow-400">💰 ${author.donations} звезд</p>
+            container.innerHTML = topAuthors.map((author, index) => {
+                const rankIcon = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+                const isSelected = selectedAuthor && selectedAuthor.name === author.name;
+                
+                return `
+                    <div class="author-card bg-dark-800 rounded-xl p-6 border-2 ${isSelected ? 'border-yellow-400' : 'border-primary'} hover:border-accent transition-all cursor-pointer gpu-accelerated transform hover:scale-105"
+                         onclick="selectAuthorForDonation('${author.name}', '${author.telegram}')">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-2xl">${rankIcon}</span>
+                                <h4 class="font-semibold text-lg">${author.name}</h4>
+                            </div>
+                            ${isSelected ? '<span class="text-yellow-400 text-sm">✓ Выбран</span>' : ''}
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+                            <div class="text-center">
+                                <div class="font-bold text-accent">${author.stories}</div>
+                                <div class="opacity-70">историй</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-accent">${author.words}</div>
+                                <div class="opacity-70">слов</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-accent">${author.avgRating}</div>
+                                <div class="opacity-70">рейтинг</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-yellow-400">${author.donations}</div>
+                                <div class="opacity-70">звезд</div>
+                            </div>
+                        </div>
+                        
+                        ${author.telegram ? `
+                            <button class="w-full horror-btn px-4 py-3 rounded-lg text-sm text-white font-semibold">
+                                💝 Поддержать автора
+                            </button>
+                        ` : ''}
                     </div>
-                    ${author.telegram ? `
-                        <button class="mt-2 w-full bg-primary px-3 py-1 rounded text-sm text-white hover:bg-secondary transition-all">
-                            💝 Поддержать
-                        </button>
-                    ` : ''}
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function updateDonationHistory() {
             const container = document.getElementById('donation-history');
             
             if (donationHistory.length === 0) {
-                container.innerHTML = '<p class="text-center opacity-50">История пуста</p>';
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-4xl mb-2 opacity-50">💸</div>
+                        <p class="opacity-50">История донатов пуста</p>
+                    </div>
+                `;
                 return;
             }
             
-            container.innerHTML = donationHistory.slice(0, 10).map(donation => `
-                <div class="flex justify-between items-center p-3 bg-dark-700 rounded border border-primary">
-                    <div>
-                        <span class="font-semibold">${donation.amount} ⭐</span>
-                        <span class="mx-2">→</span>
-                        <span>${donation.toName}</span>
+            container.innerHTML = donationHistory.slice(0, 10).map(donation => {
+                const typeIcon = donation.type === 'gold' ? '✨' : donation.type === 'silver' ? '🌟' : '⭐';
+                
+                return `
+                    <div class="flex justify-between items-center p-4 bg-dark-850 rounded-lg border border-primary">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">${typeIcon}</span>
+                            <div>
+                                <div class="font-semibold">${donation.amount} ⭐ → ${donation.toName}</div>
+                                <div class="text-sm opacity-70">${donation.date} в ${donation.time}</div>
+                            </div>
+                        </div>
+                        <div class="text-sm opacity-70">
+                            ${donation.type.toUpperCase()}
+                        </div>
                     </div>
-                    <div class="text-sm opacity-70">
-                        ${donation.date} ${donation.time}
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Profile functionality
+        function updateTotalDonated() {
+            const total = donationHistory.reduce((sum, donation) => sum + donation.amount, 0);
+            document.getElementById('total-donated').textContent = `${total} ⭐`;
+        }
+
+        function clearDonationHistory() {
+            if (confirm('Очистить историю донатов?')) {
+                donationHistory = [];
+                updateDonationHistory();
+                updateTotalDonated();
+                showNotification('История донатов очищена', 'info', '🗑️');
+            }
+        }
+
+        function checkDonationAchievements(amount) {
+            const totalDonated = donationHistory.reduce((sum, d) => sum + d.amount, 0);
+            
+            if (totalDonated >= 100 && !userData.achievements.includes('🎁 Щедрый меценат')) {
+                userData.achievements.push('🎁 Щедрый меценат');
+                showNotification('🏆 Достижение разблокировано: Щедрый меценат!', 'success');
+            }
+        }
+
+        // Enhanced profile functionality
         function saveProfile() {
             userData.name = document.getElementById('author-name').value.trim();
             userData.bio = document.getElementById('author-bio').value.trim();
             userData.telegram = document.getElementById('author-telegram').value.trim();
             
-            showNotification('Профиль сохранен!', 'success');
+            showNotification('Профиль сохранен!', 'success', '💾');
+            telegramApp.triggerHaptic('success');
             updateProfileStats();
         }
 
@@ -1081,61 +2019,135 @@
                 .reduce((total, story) => total + story.wordCount, 0);
             
             document.getElementById('user-stories-count').textContent = userStoriesCount;
-            document.getElementById('user-words-count').textContent = userWordsCount;
+            document.getElementById('user-words-count').textContent = userWordsCount.toLocaleString();
             document.getElementById('user-stars-received').textContent = userData.starsReceived;
             document.getElementById('user-followers').textContent = userData.followers;
             
+            updateAuthorLevel();
             updateAchievements();
+        }
+
+        function updateAuthorLevel() {
+            const level = Math.floor(userData.experience / 1000) + 1;
+            const currentLevelExp = userData.experience % 1000;
+            const progress = (currentLevelExp / 1000) * 100;
+            
+            userData.level = level;
+            document.getElementById('author-level').textContent = level;
+            document.getElementById('level-progress').style.width = progress + '%';
+            
+            const levelTitles = {
+                1: 'Начинающий автор',
+                2: 'Писатель-любитель',
+                3: 'Талантливый автор',
+                4: 'Мастер слова',
+                5: 'Признанный писатель',
+                10: 'Легенда ужасов'
+            };
+            
+            const title = levelTitles[level] || 'Гроссмейстер ужаса';
+            document.querySelector('#author-level').nextElementSibling.textContent = title;
+        }
+
+        function checkLevelUp() {
+            const oldLevel = userData.level;
+            updateAuthorLevel();
+            
+            if (userData.level > oldLevel) {
+                showNotification(`🎉 Повышение уровня! Теперь вы ${userData.level} уровня!`, 'success');
+                telegramApp.triggerHaptic('success');
+            }
         }
 
         function updateAchievements() {
             const achievements = [];
             
+            // Story count achievements
             if (userData.stories.length >= 1) achievements.push('🎖️ Первая история');
             if (userData.stories.length >= 5) achievements.push('📚 Плодовитый автор');
             if (userData.stories.length >= 10) achievements.push('🏆 Мастер слова');
+            if (userData.stories.length >= 25) achievements.push('👑 Король ужасов');
+            
+            // Experience achievements
+            if (userData.experience >= 1000) achievements.push('⚡ 1000 слов написано');
+            if (userData.experience >= 5000) achievements.push('🔥 5000 слов написано');
+            if (userData.experience >= 10000) achievements.push('💎 10000 слов написано');
+            
+            // Star achievements
             if (userData.starsReceived >= 50) achievements.push('⭐ Популярный автор');
             if (userData.starsReceived >= 100) achievements.push('🌟 Звездный автор');
+            if (userData.starsReceived >= 500) achievements.push('✨ Суперзвезда');
+            
+            // Special achievements
+            const horrorStories = allStories.filter(s => userData.stories.includes(s.id) && s.genre === 'horror').length;
+            if (horrorStories >= 5) achievements.push('🩸 Мастер ужасов');
+            
+            userData.achievements = achievements;
             
             const container = document.getElementById('user-achievements');
             container.innerHTML = achievements.length > 0 ? 
-                achievements.map(ach => `<p>${ach}</p>`).join('') : 
-                '<p class="opacity-50">Пока нет достижений</p>';
+                achievements.map(ach => `<div class="flex items-center space-x-2 p-2 bg-dark-800 rounded"><span>${ach}</span></div>`).join('') : 
+                '<div class="text-center opacity-50 py-4">Пока нет достижений<br>Начните писать истории!</div>';
         }
 
         function checkAchievements() {
-            const oldAchievements = userData.achievements.length;
+            const oldCount = userData.achievements.length;
             updateAchievements();
             
-            if (userData.achievements.length > oldAchievements) {
-                showNotification('🏆 Новое достижение получено!', 'success');
+            if (userData.achievements.length > oldCount) {
+                showNotification('🏆 Новое достижение разблокировано!', 'success');
+                telegramApp.triggerHaptic('success');
             }
         }
 
         function exportProfile() {
             const data = {
                 profile: userData,
-                stories: allStories.filter(story => userData.stories.includes(story.id))
+                stories: allStories.filter(story => userData.stories.includes(story.id)),
+                donations: donationHistory.filter(d => d.from === userData.telegram),
+                exportDate: new Date().toISOString()
             };
             
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${userData.name || 'user'}-profile.json`;
+            a.download = `killing-moon-${userData.name || 'profile'}-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
+            
+            showNotification('Данные профиля экспортированы!', 'success', '📄');
         }
 
-        // Admin functionality
+        function shareProfile() {
+            const profileText = `🖤 Мой профиль в Killing Moon 🖤
+            
+👤 ${userData.name || 'Аноним'}
+📚 Написано историй: ${userData.stories.length}
+📝 Всего слов: ${allStories.filter(s => userData.stories.includes(s.id)).reduce((sum, s) => sum + s.wordCount, 0)}
+⭐ Получено звезд: ${userData.starsReceived}
+🏆 Уровень: ${userData.level}
+
+Присоединяйтесь к библиотеке ужасов!`;
+            
+            if (telegramApp.tg) {
+                telegramApp.tg.shareText(profileText);
+            }
+            
+            showNotification('Профиль готов к публикации!', 'success', '📤');
+        }
+
+        // Enhanced admin functionality
         function checkAdminCode() {
             const code = document.getElementById('admin-code').value.trim();
-            if (code === 'shindzu') {
+            if (code === 'killingmoon2024' || code === 'shindzu') {
                 document.getElementById('admin-panel').classList.remove('hidden');
                 updateAdminStats();
-                showNotification('Добро пожаловать в админ-панель!', 'success');
+                showNotification('Добро пожаловать в админ-панель!', 'success', '🔐');
+                telegramApp.triggerHaptic('success');
             } else {
-                showNotification('Неверный код доступа!', 'error');
+                showNotification('Неверный код доступа!', 'error', '❌');
+                telegramApp.triggerHaptic('error');
             }
         }
 
@@ -1145,33 +2157,46 @@
         }
 
         function updateAdminStats() {
+            const totalWords = allStories.reduce((sum, story) => sum + story.wordCount, 0);
+            const totalStars = donationHistory.reduce((sum, donation) => sum + donation.amount, 0);
+            
             document.getElementById('admin-total-stories').textContent = allStories.length;
             document.getElementById('admin-total-authors').textContent = new Set(allStories.map(s => s.author)).size;
-            document.getElementById('admin-total-words').textContent = allStories.reduce((total, story) => total + story.wordCount, 0);
-            document.getElementById('admin-total-stars').textContent = donationHistory.reduce((total, donation) => total + donation.amount, 0);
+            document.getElementById('admin-total-words').textContent = totalWords.toLocaleString();
+            document.getElementById('admin-total-stars').textContent = totalStars;
         }
 
         function clearAllStories() {
-            if (confirm('Вы уверены, что хотите удалить все истории? Это действие нельзя отменить.')) {
-                allStories.splice(2); // Keep demo stories
-                userData.stories = [];
-                displayLibrary();
-                updateAdminStats();
-                updateProfileStats();
-                showNotification('Все пользовательские истории удалены.', 'success');
+            if (confirm('⚠️ ВНИМАНИЕ! Вы уверены, что хотите удалить все пользовательские истории? Это действие нельзя отменить.')) {
+                if (confirm('Последнее предупреждение! Это удалит ВСЕ истории пользователей. Продолжить?')) {
+                    // Keep only the first 3 demo stories
+                    allStories.splice(3);
+                    userData.stories = [];
+                    displayLibrary();
+                    updateAdminStats();
+                    updateProfileStats();
+                    showNotification('Все пользовательские истории удалены.', 'success', '🗑️');
+                    telegramApp.triggerHaptic('heavy');
+                }
             }
         }
 
         function exportData() {
             const data = {
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    version: '2.0',
+                    source: 'Killing Moon - Horror Library'
+                },
                 stories: allStories,
                 users: [userData],
                 donations: donationHistory,
                 stats: {
                     totalStories: allStories.length,
                     totalAuthors: new Set(allStories.map(s => s.author)).size,
-                    totalWords: allStories.reduce((total, story) => total + story.wordCount, 0),
-                    totalStars: donationHistory.reduce((total, donation) => total + donation.amount, 0)
+                    totalWords: allStories.reduce((sum, story) => sum + story.wordCount, 0),
+                    totalStars: donationHistory.reduce((sum, donation) => sum + donation.amount, 0),
+                    avgRating: (allStories.reduce((sum, story) => sum + story.rating, 0) / allStories.length).toFixed(2)
                 }
             };
             
@@ -1179,39 +2204,64 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'killing-moon-full-data.json';
+            a.download = `killing-moon-full-backup-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
+            
+            showNotification('Полная резервная копия создана!', 'success', '💾');
         }
 
         function generateReport() {
+            const genreStats = {};
+            const moodStats = {};
+            
+            allStories.forEach(story => {
+                genreStats[story.genre] = (genreStats[story.genre] || 0) + 1;
+                moodStats[story.mood] = (moodStats[story.mood] || 0) + 1;
+            });
+            
             const report = {
-                date: new Date().toLocaleDateString(),
-                totalStories: allStories.length,
-                totalAuthors: new Set(allStories.map(s => s.author)).size,
-                totalWords: allStories.reduce((total, story) => total + story.wordCount, 0),
-                totalDonations: donationHistory.reduce((total, donation) => total + donation.amount, 0),
-                genreStats: {},
-                topAuthors: {}
+                reportDate: new Date().toISOString(),
+                summary: {
+                    totalStories: allStories.length,
+                    totalAuthors: new Set(allStories.map(s => s.author)).size,
+                    totalWords: allStories.reduce((sum, story) => sum + story.wordCount, 0),
+                    totalDonations: donationHistory.reduce((sum, donation) => sum + donation.amount, 0),
+                    avgRating: (allStories.reduce((sum, story) => sum + story.rating, 0) / allStories.length).toFixed(2),
+                    avgHorrorScore: (allStories.reduce((sum, story) => sum + (story.horrorScore || 0), 0) / allStories.length).toFixed(1)
+                },
+                genreDistribution: genreStats,
+                moodDistribution: moodStats,
+                topAuthors: Object.values(allStories.reduce((acc, story) => {
+                    if (!acc[story.author]) {
+                        acc[story.author] = { name: story.author, stories: 0, words: 0, donations: 0 };
+                    }
+                    acc[story.author].stories++;
+                    acc[story.author].words += story.wordCount;
+                    acc[story.author].donations += story.donations;
+                    return acc;
+                }, {})).sort((a, b) => b.donations - a.donations).slice(0, 5),
+                recentActivity: donationHistory.slice(0, 10)
             };
             
-            // Genre statistics
-            allStories.forEach(story => {
-                report.genreStats[story.genre] = (report.genreStats[story.genre] || 0) + 1;
-            });
-            
-            // Author statistics
-            allStories.forEach(story => {
-                if (!report.topAuthors[story.author]) {
-                    report.topAuthors[story.author] = { stories: 0, words: 0, donations: 0 };
+            console.log('📊 Детальный отчет сгенерирован:', report);
+            showNotification('Отчет сгенерирован и выведен в консоль браузера', 'success', '📈');
+        }
+
+        function backupData() {
+            const backup = {
+                timestamp: Date.now(),
+                date: new Date().toISOString(),
+                data: {
+                    allStories: allStories,
+                    userData: userData,
+                    donationHistory: donationHistory,
+                    currentTheme: currentTheme
                 }
-                report.topAuthors[story.author].stories++;
-                report.topAuthors[story.author].words += story.wordCount;
-                report.topAuthors[story.author].donations += story.donations;
-            });
+            };
             
-            console.log('Generated Report:', report);
-            showNotification('Отчет сгенерирован и выведен в консоль', 'success');
+            localStorage.setItem('killingMoonBackup', JSON.stringify(backup));
+            showNotification('Резервная копия сохранена локально!', 'success', '💾');
         }
 
         function sendBroadcast() {
@@ -1222,20 +2272,98 @@
             }
             
             // In real app, this would send via Telegram bot
-            console.log('Broadcasting message:', message);
-            showNotification(`Сообщение отправлено всем пользователям: "${message}"`, 'success');
+            console.log('📡 Broadcasting message:', message);
+            showNotification(`Сообщение отправлено: "${message}"`, 'success', '📡');
             document.getElementById('broadcast-message').value = '';
+            telegramApp.triggerHaptic('success');
         }
+
+        function testNotification() {
+            showNotification('🧪 Это тестовое уведомление для проверки системы', 'info', '🧪');
+        }
+
+        // Enhanced dark mode detection
+        function setupDarkMode() {
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            }
+            
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (event.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+        }
+
+        // Performance optimization: Intersection Observer for animations
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // Observe story cards when they're created
+            document.addEventListener('DOMNodeInserted', (e) => {
+                if (e.target.classList && e.target.classList.contains('story-card')) {
+                    observer.observe(e.target);
+                }
+            });
+        }
+
+        // Load data from localStorage on startup
+        function loadUserData() {
+            const saved = localStorage.getItem('killingMoonUserData');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    userData = { ...userData, ...data };
+                    
+                    // Load form fields
+                    if (userData.name) document.getElementById('author-name').value = userData.name;
+                    if (userData.bio) document.getElementById('author-bio').value = userData.bio;
+                    if (userData.telegram) document.getElementById('author-telegram').value = userData.telegram;
+                } catch (e) {
+                    console.error('Error loading user data:', e);
+                }
+            }
+        }
+
+        // Save data to localStorage
+        function saveUserData() {
+            localStorage.setItem('killingMoonUserData', JSON.stringify(userData));
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(saveUserData, 30000);
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
+            // Load user data
+            loadUserData();
+            
+            // Setup dark mode
+            setupDarkMode();
+            
+            // Setup intersection observer
+            setupIntersectionObserver();
+            
+            // Create animated stars
+            createStars();
+            
             // Set initial theme
             setTheme('horror');
             
             // Initialize library
             displayLibrary();
+            updateLibraryStats();
             
-            // Load user data if exists
+            // Load profile stats
             updateProfileStats();
             
             // Close dropdowns when clicking outside
@@ -1243,12 +2371,44 @@
                 if (!event.target.closest('#theme-selector') && !event.target.closest('[onclick*="toggleThemeSelector"]')) {
                     document.getElementById('theme-selector').classList.add('hidden');
                 }
+                
+                if (!event.target.closest('#mobile-nav') && !event.target.closest('.mobile-nav-toggle')) {
+                    document.getElementById('mobile-nav').classList.remove('open');
+                }
+            });
+            
+            // Prevent context menu on mobile
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
             });
             
             // Show welcome message
             setTimeout(() => {
-                showNotification('Добро пожаловать в Killing Moon! 🌙', 'success');
-            }, 1000);
+                showNotification('Добро пожаловать в Killing Moon! 🌙', 'success', '🖤');
+            }, 2000);
+            
+            // Show initial tab
+            showTab('writer');
+        });
+
+        // Handle page visibility for performance
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Pause animations when page is hidden
+                document.querySelectorAll('.floating-element, .glow-effect').forEach(el => {
+                    el.style.animationPlayState = 'paused';
+                });
+            } else {
+                // Resume animations when page is visible
+                document.querySelectorAll('.floating-element, .glow-effect').forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+            }
+        });
+
+        // Handle beforeunload for data saving
+        window.addEventListener('beforeunload', function() {
+            saveUserData();
         });
     </script>
 </body>
